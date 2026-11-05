@@ -1,0 +1,47 @@
+{
+  "name": "FFT Abstract Dev Container",
+  "image": "matchlib-container:v2",
+
+  "runArgs": [
+    "--security-opt=label=disable"
+  ],
+  
+  "mounts": [
+    "source=${localEnv:HOME}/Matchlib-Examples-Kit-For-Accellera-Synthesis-WG,target=/workspace/library,type=bind",
+    "source=${localEnv:HOME}/memory,target=/workspace/library/FI_mem,type=bind"
+  ],
+
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+
+  "remoteUser": "root",
+  
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.ignoredRepositories": [
+          "/workspace/library"
+        ]
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "EditorConfig.EditorConfig",
+        "lramseyer.vaporview",
+        "ms-python.python"
+      ]
+    }
+  },
+
+  "containerEnv": {
+    "CONNECTIONS_HOME": "/workspace/library/matchlib_connections-master",
+    "AC_SIMUTILS": "/workspace/library/ac_simutils-master",
+    "AC_TYPES": "/workspace/library/ac_types-master",
+    "AC_MATH": "/workspace/library/ac_math-master",
+    "MATCHLIB_HOME": "/workspace/library/matchlib-main",
+    "RAPIDJSON_HOME": "/workspace/library/rapidjson-master",
+    "BOOST_HOME": "/workspace/library/Boost-Preprocessor-master",
+    "MATCHLIB_EXAMPLES": "/workspace/library/matchlib_examples",
+    "MEMORY": "/workspace/library/FI_mem"
+  }
+}
