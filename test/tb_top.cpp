@@ -191,6 +191,9 @@ SC_MODULE(TbTop) {
         test_scenario_3_timing_reconfig();
         wait(25); // Buffer gap
 
+        test_scenario_4_reset_recovery();
+        wait(25); // Buffer gap
+
         std::cout << "\n--------------------------------------------------------" << std::endl;
         if (test_failures == 0) {
             std::cout << "  >>> ALL Multi-Core Top SCENARIOS PASSED! <<<" << std::endl;
@@ -344,7 +347,7 @@ SC_MODULE(TbTop) {
     void test_scenario_3_timing_reconfig() {
         std::cout << "\n[Test 3] Dynamic Timing Reconfiguration (T1=4, T2=1) + Value Check..." << std::endl;
 
-        top_sys.set_timing_parameters(4, 1);
+        top_sys.set_timing_parameters(4, 1, 1);
 
         for (int c = 0; c < NUM_CORES; ++c) {
             unsigned int base_word = (0x8000 + c * 0x1000) / bytesPerBeat;
@@ -397,6 +400,116 @@ SC_MODULE(TbTop) {
 
         if (values_ok) {
             std::cout << "  PASS: Dynamic timing reconfig verified with accurate Golden FFT values!" << std::endl;
+        }
+
+        // Restore default timing
+        top_sys.set_timing_parameters(T1_VAL, T2_VAL, 1);
+    }
+
+    // SCENARIO 4: Multi-Core Top Asynchronous Reset & Clean Recovery
+    void test_scenario_4_reset_recovery() {
+        std::cout << "\n[Test 4] Top-Level Asynchronous Reset & Clean Recovery..." << std::endl;
+
+        // Preload memory for both cores
+        for (int c = 0; c < NUM_CORES; ++c) {
+            unsigned int base_word = (0xA000 + c * 0x1000) / bytesPerBeat;
+            for (int i = 0; i < N; ++i) {
+                mems[c].write_word(base_word + i, pack_complex<AxiCfg>(complex_t(i + 10, i + 20)));
+            }
+            base_addrs[c].write(0xA000 + c * 0x1000);
+            num_samples[c].write(N);
+        }
+
+        // Assert start
+        start_signal.write(true);
+
+        // Wait until active_stagger is set
+        int timeout = 20;
+        while (!top_sys.active_stagger.read() && timeout-- > 0) {
+            wait();
+        }
+
+        // Assert reset mid-coordination
+        rst_n.write(false);
+        start_signal.write(false);
+        wait(5);
+
+        // Verify stagger control state is cleanly reset
+        if (top_sys.active_stagger.read()) {
+            std::cerr << "  FAIL: active_stagger is high during reset!" << std::endl;
+            test_failures++;
+        }
+        if (top_sys.stagger_counter.read() != 0) {
+            std::cerr << "  FAIL: stagger_counter is non-zero during reset!" << std::endl;
+            test_failures++;
+        }
+        for (int c = 0; c < NUM_CORES; ++c) {
+            if (done_signals[c].read()) {
+                std::cerr << "  FAIL: Core " << c << " done is high during reset!" << std::endl;
+                test_failures++;
+            }
+        }
+
+        // Release reset
+        rst_n.write(true);
+        wait(3);
+
+        // Re-execute post-reset run
+        for (int c = 0; c < NUM_CORES; ++c) {
+            unsigned int base_word = (0xC000 + c * 0x1000) / bytesPerBeat;
+            for (int i = 0; i < N; ++i) {
+                mems[c].write_word(base_word + i, pack_complex<AxiCfg>(complex_t((c + 1) * 2.0, (i + 1) * 2.0)));
+            }
+            base_addrs[c].write(0xC000 + c * 0x1000);
+            num_samples[c].write(N);
+        }
+
+        start_signal.write(true);
+        int done_count = 0;
+        std::vector<bool> done_flags(NUM_CORES, false);
+        timeout = 500;
+        while (done_count < NUM_CORES && timeout-- > 0) {
+            wait();
+            for (int c = 0; c < NUM_CORES; ++c) {
+                if (done_signals[c].read() && !done_flags[c]) {
+                    done_flags[c] = true;
+                    done_count++;
+                }
+            }
+        }
+
+        if (timeout <= 0) {
+            std::cerr << "  FAIL: Top system timed out waiting for cores after reset recovery!" << std::endl;
+            test_failures++;
+            return;
+        }
+
+        start_signal.write(false);
+        wait(2);
+
+        // Verify results against Golden FFT
+        bool all_ok = true;
+        for (int c = 0; c < NUM_CORES; ++c) {
+            std::vector<complex_t> stimulus(N);
+            for (int i = 0; i < N; ++i) stimulus[i] = complex_t((c + 1) * 2.0, (i + 1) * 2.0);
+            std::vector<complex_t> golden = GoldenFFT::compute(stimulus);
+
+            unsigned int out_word = (0xC000 + c * 0x1000) / bytesPerBeat + N;
+            std::vector<complex_t> actual(N);
+            for (int i = 0; i < N; ++i) {
+                actual[i] = unpack_complex<AxiCfg>(mems[c].read_word(out_word + i));
+            }
+
+            std::string err;
+            if (!GoldenFFT::compare_rounded(actual, golden, 1e-3, &err)) {
+                std::cerr << "  FAIL: Core " << c << " output mismatch after reset recovery: " << err << std::endl;
+                all_ok = false;
+                test_failures++;
+            }
+        }
+
+        if (all_ok) {
+            std::cout << "  PASS: Top system cleanly recovered from reset and all cores verified with Golden FFT!" << std::endl;
         }
     }
 };

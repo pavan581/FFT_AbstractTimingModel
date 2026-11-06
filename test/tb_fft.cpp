@@ -181,9 +181,9 @@ SC_MODULE(TbFFT) {
         }
     }
 
-    void run_concurrent_transfer(const std::vector<complex_t>& stimulus, int initial_stall = 0) {
+    void run_concurrent_transfer(const std::vector<complex_t>& stimulus, int initial_stall = 0, int hold_cycles = 1) {
         test_stimulus = stimulus;
-        samples_to_consume = stimulus.size();
+        samples_to_consume = stimulus.size() * hold_cycles;
         consumer_initial_stall = initial_stall;
         output_valid_cycles.clear();
         start_producer_event.notify();
@@ -229,6 +229,12 @@ SC_MODULE(TbFFT) {
 
         test_scenario_6_math_correctness();
         verify_idle_channel(25, "Scenario 6"); // 25-cycle buffer gap
+
+        test_scenario_7_t3_output_hold();
+        verify_idle_channel(25, "Scenario 7"); // 25-cycle buffer gap
+
+        test_scenario_8_asynchronous_reset();
+        verify_idle_channel(25, "Scenario 8"); // 25-cycle buffer gap
 
         std::cout << "\n--------------------------------------------------------" << std::endl;
         if (test_failures == 0) {
@@ -453,6 +459,123 @@ SC_MODULE(TbFFT) {
 
         if (impulse_ok && dc_ok) {
             std::cout << "  PASS: Impulse and DC responses verified perfectly against analytical values!" << std::endl;
+        }
+    }
+
+    // SCENARIO 7: Output hold time verification (T3 timing variable)
+    void test_scenario_7_t3_output_hold() {
+        const int t1_test = 6;
+        const int t2_test = 2;
+        const int t3_test = 3; // Output value held for 3 clock cycles
+        std::cout << "\n[Test 7] Output Hold Time Verification (T1=" << t1_test
+                  << ", T2=" << t2_test << ", T3=" << t3_test << ") + Value Check..." << std::endl;
+        dut.set_timing_parameters(t1_test, t2_test, t3_test);
+
+        std::vector<complex_t> stimulus(N);
+        for (int i = 0; i < N; ++i) stimulus[i] = complex_t(i + 2, (i + 1) * -1.5);
+        std::vector<complex_t> golden = GoldenFFT::compute(stimulus);
+
+        // Consume all N * t3_test output beats produced by FFTTimed
+        run_concurrent_transfer(stimulus, 0, t3_test);
+
+        int first_output_start_cycle = output_valid_cycles[0];
+        int idle_t1 = first_output_start_cycle - last_input_end_cycle;
+        if (idle_t1 != t1_test) {
+            std::cerr << "  FAIL: T1=" << idle_t1 << ", expected " << t1_test << std::endl;
+            test_failures++;
+        }
+
+        // 1. T3 hold cycles verification:
+        // Each sample is held across t3_test consecutive clock cycles (gap of 1 cycle between hold beats)
+        bool hold_ok = true;
+        for (int i = 0; i < N; ++i) {
+            for (int r = 1; r < t3_test; ++r) {
+                int cycle_diff = output_valid_cycles[i * t3_test + r] - output_valid_cycles[i * t3_test + r - 1];
+                if (cycle_diff != 1) {
+                    std::cerr << "  FAIL: Sample " << i << " hold beat " << r
+                              << " was " << cycle_diff << " cycles apart, expected 1 (consecutive hold)" << std::endl;
+                    hold_ok = false;
+                    test_failures++;
+                }
+            }
+        }
+
+        // 2. T2 inter-sample gap verification:
+        // Between the last beat of sample (i-1) and the first beat of sample i, idle gap is T2
+        bool t2_ok = true;
+        for (int i = 1; i < N; ++i) {
+            int idle_gap = output_valid_cycles[i * t3_test] - output_valid_cycles[i * t3_test - 1] - 1;
+            if (idle_gap != t2_test) {
+                std::cerr << "  FAIL: Gap between sample " << (i - 1) << " and " << i
+                          << " was " << idle_gap << " idle cycles, expected T2=" << t2_test << std::endl;
+                t2_ok = false;
+                test_failures++;
+            }
+        }
+
+        // 3. Mathematical correctness check across all hold beats
+        bool values_ok = true;
+        for (int i = 0; i < N; ++i) {
+            for (int r = 0; r < t3_test; ++r) {
+                const complex_t& actual = captured_output[i * t3_test + r];
+                const complex_t& expected = golden[i];
+                if (std::abs(actual.real - expected.real) > 1e-4 || std::abs(actual.imag - expected.imag) > 1e-4) {
+                    std::cerr << "  FAIL: Sample " << i << " beat " << r << " mismatch: expected ("
+                              << expected.real << ", " << expected.imag << "), got ("
+                              << actual.real << ", " << actual.imag << ")" << std::endl;
+                    values_ok = false;
+                    test_failures++;
+                    break;
+                }
+            }
+            if (!values_ok) break;
+        }
+
+        if (idle_t1 == t1_test && hold_ok && t2_ok && values_ok) {
+            std::cout << "  PASS: T3=" << t3_test << " output hold cycles, T2=" << t2_test
+                      << " idle gaps, and all Golden FFT values verified across all hold cycles!" << std::endl;
+        }
+
+        // Restore default timing parameters
+        dut.set_timing_parameters(T1_VAL, T2_VAL, 1);
+    }
+
+    // SCENARIO 8: Asynchronous reset verification and clean recovery
+    void test_scenario_8_asynchronous_reset() {
+        std::cout << "\n[Test 8] Asynchronous Reset & Clean State Recovery..." << std::endl;
+        dut.set_timing_parameters(4, 1, 1);
+
+        // 1. Assert reset while feeding partial inputs
+        rst_n.write(true);
+        wait(2);
+        // Assert reset mid-operation
+        rst_n.write(false);
+        wait(5);
+
+        // Check channel states during reset
+        if (dut.out_data.val.read()) {
+            std::cerr << "  FAIL: out_data.val should be 0 during reset!" << std::endl;
+            test_failures++;
+        }
+
+        // Deassert reset
+        rst_n.write(true);
+        wait(3);
+
+        // 2. Perform a full valid transaction to verify complete post-reset recovery
+        std::vector<complex_t> stimulus(N);
+        for (int i = 0; i < N; ++i) stimulus[i] = complex_t(3.0 * i, 2.0 - i);
+        std::vector<complex_t> golden = GoldenFFT::compute(stimulus);
+
+        run_concurrent_transfer(stimulus);
+
+        std::string err_msg;
+        bool values_ok = GoldenFFT::compare(captured_output, golden, 1e-4, &err_msg);
+        if (!values_ok) {
+            std::cerr << "  FAIL: Post-reset value mismatch: " << err_msg << std::endl;
+            test_failures++;
+        } else {
+            std::cout << "  PASS: Module recovered cleanly after reset, Golden FFT verified!" << std::endl;
         }
     }
 };

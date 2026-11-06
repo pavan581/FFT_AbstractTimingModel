@@ -19,7 +19,7 @@ using namespace sc_core;
 using namespace axi;
 using namespace Connections;
 
-template<int N_SIZE, typename AxiCfg, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1>
+template<int N_SIZE, typename AxiCfg, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1, int OUTPUT_HOLD_CYCLES = 1>
 SC_MODULE(Core) {
     // Clock and active-low reset
     sc_in<bool> clk;
@@ -41,8 +41,8 @@ SC_MODULE(Core) {
     Combinational<complex_t> fft_to_dma_chan;
 
     // Submodules
-    DMA<AxiCfg, N_SIZE, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP> dma;
-    FFTTimed<N_SIZE, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP> fft;
+    DMA<AxiCfg, N_SIZE, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP, OUTPUT_HOLD_CYCLES> dma;
+    FFTTimed<N_SIZE, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP, OUTPUT_HOLD_CYCLES> fft;
 
     SC_CTOR(Core)
         : clk("clk"),
@@ -79,8 +79,8 @@ SC_MODULE(Core) {
         fft.out_data(fft_to_dma_chan);
     }
 
-    void set_timing_parameters(int t1, int t2) {
-        fft.set_timing_parameters(t1, t2);
+    void set_timing_parameters(int t1, int t2, int t3 = 1) {
+        fft.set_timing_parameters(t1, t2, t3);
     }
 };
 

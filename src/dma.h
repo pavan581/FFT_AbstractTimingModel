@@ -21,7 +21,7 @@ using namespace sc_core;
 using namespace axi;
 using namespace Connections;
 
-template<typename AxiCfg, int N_SIZE = 8, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1>
+template<typename AxiCfg, int N_SIZE = 8, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1, int OUTPUT_HOLD_CYCLES = 1>
 SC_MODULE(DMA) {
     sc_in<bool> clk;
     sc_in<bool> rst_n; // Active-low asynchronous reset

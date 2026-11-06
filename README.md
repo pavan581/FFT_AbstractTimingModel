@@ -52,7 +52,7 @@ Both variables can be set:
 |   |           |           |     |           |           |     |          |          |   |
 |   | +---------v---------+ |     | +---------v---------+ |     | +--------v--------+ |   |
 |   | | FFTTimed (fft.h)  | |     | | FFTTimed (fft.h)  | |     | | FFTTimed (fft.h)| |   |
-|   | | (T1, T2 timing)   | |     | | (T1, T2 timing)   | |     | | (T1, T2 timing) | |   |
+|   | | (T1, T2, T3)       | |     | | (T1, T2, T3)       | |     | | (T1, T2, T3)   | |   |
 |   | +-------------------+ |     | +-------------------+ |     | +-----------------+ |   |
 |   +-----------|-----------+     +-----------|-----------+     +----------|----------+   |
 |               |                             |                            |              |
@@ -71,6 +71,7 @@ Both variables can be set:
    - Computes canonical Discrete Fourier Transform (DFT) using standard C++ `std::complex` arithmetic in zero simulation time (abstract behavioral execution).
    - Enforces exact $T_1$ (`FIRST_SAMPLE_LATENCY`) clock cycles of pipeline latency from the last input sample to the first output sample.
    - Streams subsequent output samples with an exact gap of $T_2$ (`INTER_SAMPLE_GAP`) clock cycles.
+   - Holds each output sample available / valid for exactly $T_3$ (`OUTPUT_HOLD_CYCLES`) clock cycles.
 2. **`DMA` (`src/dma.h`)**:
    - Manages AXI4 master read (`ar`, `r`) and write (`aw`, `w`, `b`) ports.
    - Supports multi-burst transfers ($> 256$ beats per transaction).
@@ -94,20 +95,25 @@ Comprehensive testbenches are provided for every module:
   - Scenario 4: Multi-frame consecutive processing.
   - Scenario 5: Consumer backpressure handling.
   - Scenario 6: Mathematical verification (Impulse, DC, Sine).
+  - Scenario 7: Output hold time verification ($T_3$ hold cycles).
+  - Scenario 8: Asynchronous reset & clean state recovery.
 - **`test/tb_dma.cpp`**: Unit tests for DMA:
   - Scenario 1: Basic block transfer and loopback.
   - Scenario 2: Multi-burst transfers ($> 256$ beats).
   - Scenario 3: Handshake re-triggering across multiple runs.
   - Scenario 4: Arbitrary base address offsets.
+  - Scenario 5: Active transfer mid-operation reset & clean recovery.
 - **`test/tb_core.cpp`**: Integrated single-core tests:
   - Scenario 1: End-to-end memory-to-memory processing.
   - Scenario 2: Multi-block continuous processing (e.g. 64 samples).
   - Scenario 3: Dynamic timing parameter variation ($T_1, T_2$).
   - Scenario 4: Frequency spectrum verification against tone.
+  - Scenario 5: Active Core reset & clean recovery with $T_3$ hold timing.
 - **`test/tb_top.cpp`**: Top-level multi-core tests:
   - Scenario 1: Staggered dispatch with `HOP_SIZE`.
   - Scenario 2: Distributed multi-block workload across all cores.
-  - Scenario 3: Dynamic timing reconfiguration.
+  - Scenario 3: Dynamic timing reconfiguration ($T_1, T_2, T_3$).
+  - Scenario 4: Top-level asynchronous reset & clean recovery.
 
 ---
 

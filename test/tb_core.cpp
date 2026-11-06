@@ -176,6 +176,9 @@ SC_MODULE(TbCore) {
         test_scenario_4_frequency_tone();
         wait(25); // Buffer gap
 
+        test_scenario_5_reset_recovery();
+        wait(25); // Buffer gap
+
         std::cout << "\n--------------------------------------------------------" << std::endl;
         if (test_failures == 0) {
             std::cout << "  >>> ALL Core MODULE SCENARIOS PASSED! <<<" << std::endl;
@@ -408,6 +411,91 @@ SC_MODULE(TbCore) {
             std::cerr << "  FAIL: Tone peak at bin " << max_bin << " (expected " << target_bin << ")" << std::endl;
             test_failures++;
         }
+    }
+
+    // SCENARIO 5: Active Core reset & clean recovery with T3 hold time
+    void test_scenario_5_reset_recovery() {
+        std::cout << "\n[Test 5] Active Core Reset & Clean Recovery (Testing Reset + T3 hold)..." << std::endl;
+        const unsigned int base = 0x4000;
+        const unsigned int base_word = base / bytesPerBeat;
+
+        // Preload input samples
+        for (int i = 0; i < N; ++i) {
+            mem.write_word(base_word + i, pack_complex<AxiCfg>(complex_t(i + 1, i + 2)));
+        }
+
+        // Start core execution
+        base_addr.write(base);
+        num_samples.write(N);
+        start.write(true);
+
+        int timeout = 20;
+        while (!busy.read() && timeout-- > 0) {
+            wait();
+        }
+
+        // Assert reset mid-execution
+        rst_n.write(false);
+        start.write(false);
+        wait(5);
+
+        // Verify status signals reset
+        if (busy.read() || done.read()) {
+            std::cerr << "  FAIL: Core busy or done asserted during reset!" << std::endl;
+            test_failures++;
+        }
+
+        // Deassert reset
+        rst_n.write(true);
+        wait(3);
+
+        // Re-execute post-reset run
+        const unsigned int rec_base = 0x5000;
+        const unsigned int rec_base_word = rec_base / bytesPerBeat;
+        std::vector<complex_t> rec_in(N);
+        for (int i = 0; i < N; ++i) {
+            rec_in[i] = complex_t(2.0 * i + 1, 3.0 - i);
+            mem.write_word(rec_base_word + i, pack_complex<AxiCfg>(rec_in[i]));
+        }
+        std::vector<complex_t> golden = GoldenFFT::compute(rec_in);
+
+        core.set_timing_parameters(6, 2, 1); // T1=6, T2=2, T3=1
+        base_addr.write(rec_base);
+        num_samples.write(N);
+        start.write(true);
+
+        wait();
+        timeout = 500;
+        while (!done.read() && timeout-- > 0) {
+            wait();
+        }
+
+        if (timeout <= 0) {
+            std::cerr << "  FAIL: Core timed out after reset recovery!" << std::endl;
+            test_failures++;
+            return;
+        }
+
+        start.write(false);
+        wait(2);
+
+        // Verify actual outputs match Golden FFT
+        std::vector<complex_t> actual(N);
+        for (int i = 0; i < N; ++i) {
+            actual[i] = unpack_complex<AxiCfg>(mem.read_word(rec_base_word + N + i));
+        }
+
+        std::string err;
+        bool val_ok = GoldenFFT::compare_rounded(actual, golden, 1e-3, &err);
+        if (val_ok) {
+            std::cout << "  PASS: Core cleanly recovered from reset and verified with T3 timing!" << std::endl;
+        } else {
+            std::cerr << "  FAIL: Post-reset output mismatch: " << err << std::endl;
+            test_failures++;
+        }
+
+        // Restore default timing
+        core.set_timing_parameters(T1_DEFAULT, T2_DEFAULT, 1);
     }
 };
 

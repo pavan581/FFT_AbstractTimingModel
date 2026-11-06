@@ -8,14 +8,16 @@
  *     sample completes before the first output sample becomes valid.
  *   - INTER_SAMPLE_GAP     (T2): Clock cycles of idle gap between consecutive
  *     output samples (idle time between sample valid pulses).
+ *   - OUTPUT_HOLD_CYCLES   (T3): Clock cycles defining how long each output value
+ *     should be available / valid.
  *
  * Timing Behavior:
  *   - Consumes N complex input samples sequentially via in_data (Connections channel).
  *   - Computes FFT in 0 simulation time using canonical standard C++ complex arithmetic.
  *   - Waits exactly T1 (FIRST_SAMPLE_LATENCY) idle clock cycles after the last input sample is received.
- *   - Streams the first output sample on out_data (Connections channel: val/rdy/msg).
- *   - Streams the remaining (N-1) output samples with exactly T2 (INTER_SAMPLE_GAP) idle clock
- *     cycles between consecutive output pulses.
+ *   - Streams each output sample on out_data (Connections channel: val/rdy/msg), holding each
+ *     output value available for exactly T3 (OUTPUT_HOLD_CYCLES) clock cycles.
+ *   - Inserts exactly T2 (INTER_SAMPLE_GAP) idle clock cycles between consecutive output values.
  */
 
 #ifndef FFT_TIMED_H
@@ -31,7 +33,7 @@
 using namespace sc_core;
 using namespace Connections;
 
-template<int N_SIZE, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1>
+template<int N_SIZE, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1, int OUTPUT_HOLD_CYCLES = 1>
 SC_MODULE(FFTTimed) {
     // Clock and active-low asynchronous reset
     sc_in<bool> clk;
@@ -41,9 +43,10 @@ SC_MODULE(FFTTimed) {
     In<complex_t> in_data;
     Out<complex_t> out_data;
 
-    // Configurable timing parameters (T1, T2)
+    // Configurable timing parameters (T1, T2, T3)
     int first_sample_latency;
     int inter_sample_gap;
+    int output_hold_cycles;
 
     // Internal sample storage (module-level persistent hardware registers)
     std::vector<complex_t> in_buffer;
@@ -58,7 +61,8 @@ SC_MODULE(FFTTimed) {
 
     FFTTimed(sc_module_name name,
              int t1 = FIRST_SAMPLE_LATENCY,
-             int t2 = INTER_SAMPLE_GAP)
+             int t2 = INTER_SAMPLE_GAP,
+             int t3 = OUTPUT_HOLD_CYCLES)
         : sc_module(name),
           clk("clk"),
           rst_n("rst_n"),
@@ -66,6 +70,7 @@ SC_MODULE(FFTTimed) {
           out_data("out_data"),
           first_sample_latency(t1),
           inter_sample_gap(t2),
+          output_hold_cycles(t3),
           in_buffer(N_SIZE),
           out_buffer(N_SIZE),
           total_blocks_processed(0),
@@ -77,9 +82,10 @@ SC_MODULE(FFTTimed) {
         async_reset_signal_is(rst_n, false);
     }
 
-    void set_timing_parameters(int t1, int t2) {
+    void set_timing_parameters(int t1, int t2, int t3 = 1) {
         first_sample_latency = (t1 >= 0) ? t1 : 0;
         inter_sample_gap = (t2 >= 0) ? t2 : 0;
+        output_hold_cycles = (t3 >= 1) ? t3 : 1;
     }
 
     // Canonical DFT formula using standard C++ complex arithmetic
@@ -124,19 +130,23 @@ private:
                 wait();
             }
 
-            // Step 4: Stream first output sample (active for 1 clock cycle)
-            out_data.Push(out_buffer[0]);
+            // Step 4: Stream first output sample (available for T3 clock cycles)
             total_samples_out++;
-            wait();
+            for (int c = 0; c < output_hold_cycles; ++c) {
+                out_data.Push(out_buffer[0]);
+                wait();
+            }
 
             // Step 5: Stream remaining samples with exactly T2 idle cycles between them
             for (int i = 1; i < N_SIZE; ++i) {
                 for (int c = 0; c < inter_sample_gap; ++c) {
                     wait();
                 }
-                out_data.Push(out_buffer[i]);
                 total_samples_out++;
-                wait();
+                for (int c = 0; c < output_hold_cycles; ++c) {
+                    out_data.Push(out_buffer[i]);
+                    wait();
+                }
             }
 
             total_blocks_processed++;

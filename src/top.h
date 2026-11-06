@@ -18,7 +18,7 @@
 using namespace sc_core;
 using namespace axi;
 
-template<int N_SIZE, int NUM_CORES, int HOP_SIZE, typename AxiCfg, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1>
+template<int N_SIZE, int NUM_CORES, int HOP_SIZE, typename AxiCfg, int FIRST_SAMPLE_LATENCY = 8, int INTER_SAMPLE_GAP = 1, int OUTPUT_HOLD_CYCLES = 1>
 SC_MODULE(Top) {
     // Clock and active-low reset
     sc_in<bool> clk;
@@ -39,7 +39,7 @@ SC_MODULE(Top) {
     sc_vector<sc_signal<bool>> core_busy;
 
     // Cores array
-    sc_vector<Core<N_SIZE, AxiCfg, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP>> cores;
+    sc_vector<Core<N_SIZE, AxiCfg, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP, OUTPUT_HOLD_CYCLES>> cores;
 
     // Stagger control state signals
     sc_signal<bool> active_stagger;
@@ -81,9 +81,9 @@ SC_MODULE(Top) {
     }
 
     // Dynamic timing reconfiguration for all cores
-    void set_timing_parameters(int t1, int t2) {
+    void set_timing_parameters(int t1, int t2, int t3 = 1) {
         for (int i = 0; i < NUM_CORES; ++i) {
-            cores[i].set_timing_parameters(t1, t2);
+            cores[i].set_timing_parameters(t1, t2, t3);
         }
     }
 

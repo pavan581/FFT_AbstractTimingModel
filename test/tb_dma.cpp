@@ -138,6 +138,7 @@ SC_MODULE(TbDMA) {
         test_scenario_2_multiburst_transfer();
         test_scenario_3_retrigger_handshake();
         test_scenario_4_address_offset();
+        test_scenario_5_reset_recovery();
 
         std::cout << "\n--------------------------------------------------------" << std::endl;
         if (test_failures == 0) {
@@ -303,6 +304,87 @@ SC_MODULE(TbDMA) {
         } else {
             std::cerr << "  FAIL: Expected (154, 264), got (" << res.real << ", " << res.imag << ")" << std::endl;
             test_failures++;
+        }
+    }
+
+    // SCENARIO 5: Active transfer reset & clean recovery
+    void test_scenario_5_reset_recovery() {
+        std::cout << "\n[Test 5] Active Transfer Reset & Clean Recovery..." << std::endl;
+        const int count = 16;
+        const unsigned int base = 0x1000;
+        const unsigned int base_word = base / bytesPerBeat;
+
+        for (int i = 0; i < count; ++i) {
+            mem.write_word(base_word + i, pack_complex<AxiCfg>(complex_t(i + 5, (i + 5) * 2)));
+        }
+
+        // Start transfer
+        base_addr.write(base);
+        num_samples.write(count);
+        start.write(true);
+
+        // Wait until DMA goes busy
+        int timeout = 20;
+        while (!busy.read() && timeout-- > 0) {
+            wait();
+        }
+
+        // Assert reset mid-operation
+        rst_n.write(false);
+        start.write(false);
+        wait(5);
+
+        // Verify status signals reset immediately
+        if (busy.read() || done.read()) {
+            std::cerr << "  FAIL: DMA busy or done high during reset!" << std::endl;
+            test_failures++;
+        }
+
+        // Release reset
+        rst_n.write(true);
+        wait(3);
+
+        // Re-execute full transfer
+        const unsigned int new_base = 0x2000;
+        const unsigned int new_base_word = new_base / bytesPerBeat;
+        for (int i = 0; i < count; ++i) {
+            mem.write_word(new_base_word + i, pack_complex<AxiCfg>(complex_t(i + 10, i + 20)));
+        }
+
+        base_addr.write(new_base);
+        num_samples.write(count);
+        start.write(true);
+
+        wait();
+        timeout = 500;
+        while (!done.read() && timeout-- > 0) {
+            wait();
+        }
+
+        if (timeout <= 0) {
+            std::cerr << "  FAIL: DMA timed out after reset recovery!" << std::endl;
+            test_failures++;
+            return;
+        }
+
+        start.write(false);
+        wait(2);
+
+        // Verify output data
+        bool match = true;
+        for (int i = 0; i < count; ++i) {
+            complex_t in_val(i + 10, i + 20);
+            complex_t expected(in_val.real * 2.0, in_val.imag * 3.0);
+            complex_t actual = unpack_complex<AxiCfg>(mem.read_word(new_base_word + count + i));
+            if (std::abs(actual.real - expected.real) > 1e-4 || std::abs(actual.imag - expected.imag) > 1e-4) {
+                match = false;
+                test_failures++;
+                break;
+            }
+        }
+
+        if (match) {
+            std::cout << "  PASS: DMA recovered cleanly after mid-transfer reset and verified data!" << std::endl;
         }
     }
 };

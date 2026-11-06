@@ -8,6 +8,12 @@ echo "=========================================================="
 echo "    STARTING FULL VERIFICATION FOR FFT ABSTRACT MODEL     "
 echo "=========================================================="
 
+echo "Clean previous builds..."
+make clean
+
+echo "Building testbenches..."
+make all
+
 FAILED=0
 
 run_suite() {
@@ -40,3 +46,4 @@ else
     exit 1
 fi
 
+python3 plot_fft_data.py
