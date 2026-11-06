@@ -1,0 +1,18 @@
+# Build directory
+build
+
+# Archive directory
+archive
+
+# Workspace Folder
+.vscode
+
+# Library
+library
+
+# Development
+.devcontainer
+
+# Temporary files
+ac_reset_signal_is.h
+__pycache__
