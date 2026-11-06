@@ -6,7 +6,8 @@
  * Verification Features:
  *   - Verifies parallel multi-core execution with staggered start dispatch (HOP_SIZE).
  *   - Hierarchical signal grouping in top_system.vcd (ctrl.*, core_0.*, core_1.*).
- *   - Traces both INPUT data (in_valid, in_real, in_imag) and OUTPUT data (out_valid, out_real, out_imag, out_mag) per core.
+ *   - Traces top-level coordination (active_stagger, stagger_counter) and per-core status (busy, done).
+ *   - Traces per-core Connections channels (val, rdy, msg) directly in VCD waveforms.
  *   - Golden FFT verification across all cores and all scenarios.
  *   - Multi-block distributed workloads and dynamic timing reconfiguration.
  */
@@ -16,6 +17,7 @@
 
 #include <systemc.h>
 #include <axi/axi4.h>
+#include <connections/connections_trace.h>
 #include <vector>
 #include <cmath>
 #include <cassert>
@@ -61,15 +63,8 @@ SC_MODULE(TbTop) {
     sc_signal<int> cycle_count;
     int test_failures;
 
-    // VCD waveform tracing signals
+    // VCD waveform tracing
     sc_trace_file* tf;
-    sc_vector<sc_signal<bool>>   core_in_valid;
-    sc_vector<sc_signal<double>> core_in_real;
-    sc_vector<sc_signal<double>> core_in_imag;
-    sc_vector<sc_signal<bool>>   core_out_valid;
-    sc_vector<sc_signal<double>> core_out_real;
-    sc_vector<sc_signal<double>> core_out_imag;
-    sc_vector<sc_signal<double>> core_out_mag;
 
     // Testbench CSV loggers per core
     std::vector<DataTracer*> tracers;
@@ -87,14 +82,7 @@ SC_MODULE(TbTop) {
           top_sys("top_sys"),
           cycle_count("cycle_count"),
           test_failures(0),
-          tf(nullptr),
-          core_in_valid("core_in_valid", NUM_CORES),
-          core_in_real("core_in_real", NUM_CORES),
-          core_in_imag("core_in_imag", NUM_CORES),
-          core_out_valid("core_out_valid", NUM_CORES),
-          core_out_real("core_out_real", NUM_CORES),
-          core_out_imag("core_out_imag", NUM_CORES),
-          core_out_mag("core_out_mag", NUM_CORES)
+          tf(nullptr)
     {
         for (int i = 0; i < NUM_CORES; ++i) {
             tracers.push_back(new DataTracer("top_core_" + std::to_string(i), "./out/data"));
@@ -119,19 +107,14 @@ SC_MODULE(TbTop) {
                 sc_trace(tf, top_sys.core_busy[i],   (prefix + "busy").c_str());
                 sc_trace(tf, done_signals[i],         (prefix + "done").c_str());
 
-                // Input signals
-                sc_trace(tf, core_in_valid[i],       (prefix + "in_valid").c_str());
-                sc_trace(tf, core_in_real[i],        (prefix + "in_real").c_str());
-                sc_trace(tf, core_in_imag[i],        (prefix + "in_imag").c_str());
+                // FFT Connections ports for each core (rdy, val, msg)
+                sc_trace(tf, top_sys.cores[i].fft.in_data.rdy, (prefix + "fft.in.rdy").c_str());
+                sc_trace(tf, top_sys.cores[i].fft.in_data.val, (prefix + "fft.in.valid").c_str());
+                sc_trace(tf, top_sys.cores[i].fft.in_data.msg, (prefix + "fft.in.msg").c_str());
 
-                // Output signals
-                sc_trace(tf, core_out_valid[i],      (prefix + "out_valid").c_str());
-                sc_trace(tf, core_out_real[i],       (prefix + "out_real").c_str());
-                sc_trace(tf, core_out_imag[i],       (prefix + "out_imag").c_str());
-                sc_trace(tf, core_out_mag[i],        (prefix + "out_mag").c_str());
-                
-                // Internal FFT Core Status
-                sc_trace(tf, top_sys.cores[i].fft_out_valid, (prefix + "fft_out_valid").c_str());
+                sc_trace(tf, top_sys.cores[i].fft.out_data.rdy, (prefix + "fft.out.rdy").c_str());
+                sc_trace(tf, top_sys.cores[i].fft.out_data.val, (prefix + "fft.out.valid").c_str());
+                sc_trace(tf, top_sys.cores[i].fft.out_data.msg, (prefix + "fft.out.msg").c_str());
             }
         }
 
@@ -183,13 +166,6 @@ SC_MODULE(TbTop) {
         for (int i = 0; i < NUM_CORES; ++i) {
             base_addrs[i].write(0);
             num_samples[i].write(0);
-            core_in_valid[i].write(false);
-            core_in_real[i].write(0.0);
-            core_in_imag[i].write(0.0);
-            core_out_valid[i].write(false);
-            core_out_real[i].write(0.0);
-            core_out_imag[i].write(0.0);
-            core_out_mag[i].write(0.0);
         }
         wait(5);
         rst_n.write(true);
@@ -239,13 +215,6 @@ SC_MODULE(TbTop) {
                 core_inputs[c][i] = complex_t((c + 1.0) * (i + 1), (i + 1) * 2.0);
                 mems[c].write_word(base_word + i, pack_complex<AxiCfg>(core_inputs[c][i]));
                 tracers[c]->log_input(core_inputs[c][i]);
-
-                // Trace input sample into VCD for GTKWave inspection
-                core_in_valid[c].write(true);
-                core_in_real[c].write(core_inputs[c][i].real);
-                core_in_imag[c].write(core_inputs[c][i].imag);
-                wait();
-                core_in_valid[c].write(false);
             }
             core_goldens[c] = GoldenFFT::compute(core_inputs[c]);
             base_addrs[c].write(c * 0x1000);
@@ -282,14 +251,6 @@ SC_MODULE(TbTop) {
             for (int i = 0; i < N; ++i) {
                 actual[i] = unpack_complex<AxiCfg>(mems[c].read_word(out_word + i));
                 tracers[c]->log_output(actual[i]);
-
-                // Trace output sample into VCD
-                core_out_valid[c].write(true);
-                core_out_real[c].write(actual[i].real);
-                core_out_imag[c].write(actual[i].imag);
-                core_out_mag[c].write(actual[i].magnitude());
-                wait();
-                core_out_valid[c].write(false);
             }
 
             std::string err;

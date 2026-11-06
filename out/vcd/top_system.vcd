@@ -1,5 +1,5 @@
 $date
-     Nov 05, 2026       19:25:57
+     Nov 06, 2026       15:09:29
 $end
 
 $version
@@ -15,27 +15,39 @@ $scope module core_0 $end
 $var wire    1  aaaag  start       $end
 $var wire    1  aaaah  busy       $end
 $var wire    1  aaaai  done       $end
-$var wire    1  aaaaj  in_valid       $end
-$var real    1  aaaak  in_real       $end
-$var real    1  aaaal  in_imag       $end
-$var wire    1  aaaam  out_valid       $end
-$var real    1  aaaan  out_real       $end
-$var real    1  aaaao  out_imag       $end
-$var real    1  aaaap  out_mag       $end
-$var wire    1  aaaaq  fft_out_valid       $end
+$scope module fft $end
+$scope module in $end
+$var real    1  aaaay  msg_real       $end
+$var real    1  aaaaz  msg_imag       $end
+$var wire    1  aaaba  rdy       $end
+$var wire    1  aaabb  valid       $end
+$upscope $end
+$scope module out $end
+$var real    1  aaaau  msg_real       $end
+$var real    1  aaaav  msg_imag       $end
+$var wire    1  aaaaw  rdy       $end
+$var wire    1  aaaax  valid       $end
+$upscope $end
+$upscope $end
 $upscope $end
 $scope module core_1 $end
-$var wire    1  aaaar  start       $end
-$var wire    1  aaaas  busy       $end
-$var wire    1  aaaat  done       $end
-$var wire    1  aaaau  in_valid       $end
-$var real    1  aaaav  in_real       $end
-$var real    1  aaaaw  in_imag       $end
-$var wire    1  aaaax  out_valid       $end
-$var real    1  aaaay  out_real       $end
-$var real    1  aaaaz  out_imag       $end
-$var real    1  aaaba  out_mag       $end
-$var wire    1  aaabb  fft_out_valid       $end
+$var wire    1  aaaaj  start       $end
+$var wire    1  aaaak  busy       $end
+$var wire    1  aaaal  done       $end
+$scope module fft $end
+$scope module in $end
+$var real    1  aaaaq  msg_real       $end
+$var real    1  aaaar  msg_imag       $end
+$var wire    1  aaaas  rdy       $end
+$var wire    1  aaaat  valid       $end
+$upscope $end
+$scope module out $end
+$var real    1  aaaam  msg_real       $end
+$var real    1  aaaan  msg_imag       $end
+$var wire    1  aaaao  rdy       $end
+$var wire    1  aaaap  valid       $end
+$upscope $end
+$upscope $end
 $upscope $end
 $scope module ctrl $end
 $var wire    1  aaaaa  clk       $end
@@ -63,25 +75,31 @@ b0 aaaaf
 0aaaah
 0aaaai
 0aaaaj
-r0 aaaak
-r0 aaaal
-0aaaam
+0aaaak
+0aaaal
+r0 aaaam
 r0 aaaan
-r0 aaaao
-r0 aaaap
-0aaaaq
-0aaaar
+0aaaao
+0aaaap
+r0 aaaaq
+r0 aaaar
 0aaaas
 0aaaat
-0aaaau
+r0 aaaau
 r0 aaaav
-r0 aaaaw
+0aaaaw
 0aaaax
 r0 aaaay
 r0 aaaaz
-r0 aaaba
+0aaaba
 0aaabb
 $end
+
+#10
+1aaaao
+1aaaas
+1aaaaw
+1aaaba
 
 #500
 0aaaaa
@@ -295,914 +313,1082 @@ b11010 aaaaf
 
 #31000
 1aaaaa
+1aaaac
 b11011 aaaaf
-1aaaaj
-r1 aaaak
-r2 aaaal
 
 #31500
 0aaaaa
 
 #32000
 1aaaaa
+1aaaad
+b1 aaaae
 b11100 aaaaf
-r2 aaaak
-r4 aaaal
+1aaaag
 
 #32500
 0aaaaa
 
 #33000
 1aaaaa
+b10 aaaae
 b11101 aaaaf
-r3 aaaak
-r6 aaaal
+1aaaah
 
 #33500
 0aaaaa
 
 #34000
 1aaaaa
+b11 aaaae
 b11110 aaaaf
-r4 aaaak
-r8 aaaal
 
 #34500
 0aaaaa
 
 #35000
 1aaaaa
+b100 aaaae
 b11111 aaaaf
-r5 aaaak
-r10 aaaal
+r1 aaaay
+r2 aaaaz
+
+#35010
+1aaabb
 
 #35500
 0aaaaa
 
 #36000
 1aaaaa
+b101 aaaae
 b100000 aaaaf
-r6 aaaak
-r12 aaaal
+r2 aaaay
+r4 aaaaz
 
 #36500
 0aaaaa
 
 #37000
 1aaaaa
+b110 aaaae
 b100001 aaaaf
-r7 aaaak
-r14 aaaal
+r3 aaaay
+r6 aaaaz
 
 #37500
 0aaaaa
 
 #38000
 1aaaaa
+b111 aaaae
 b100010 aaaaf
-r8 aaaak
-r16 aaaal
+r4 aaaay
+r8 aaaaz
 
 #38500
 0aaaaa
 
 #39000
 1aaaaa
+b1000 aaaae
 b100011 aaaaf
-r9 aaaak
-r18 aaaal
+r5 aaaay
+r10 aaaaz
 
 #39500
 0aaaaa
 
 #40000
 1aaaaa
+b1001 aaaae
 b100100 aaaaf
-r10 aaaak
-r20 aaaal
+1aaaaj
+r6 aaaay
+r12 aaaaz
 
 #40500
 0aaaaa
 
 #41000
 1aaaaa
+b1010 aaaae
 b100101 aaaaf
-r11 aaaak
-r22 aaaal
+1aaaak
+r7 aaaay
+r14 aaaaz
 
 #41500
 0aaaaa
 
 #42000
 1aaaaa
+b1011 aaaae
 b100110 aaaaf
-r12 aaaak
-r24 aaaal
+r8 aaaay
+r16 aaaaz
 
 #42500
 0aaaaa
 
 #43000
 1aaaaa
+b1100 aaaae
 b100111 aaaaf
-r13 aaaak
-r26 aaaal
+r2 aaaaq
+r2 aaaar
+r9 aaaay
+r18 aaaaz
+
+#43010
+1aaaat
 
 #43500
 0aaaaa
 
 #44000
 1aaaaa
+b1101 aaaae
 b101000 aaaaf
-r14 aaaak
-r28 aaaal
+r4 aaaaq
+r4 aaaar
+r10 aaaay
+r20 aaaaz
 
 #44500
 0aaaaa
 
 #45000
 1aaaaa
+b1110 aaaae
 b101001 aaaaf
-r15 aaaak
-r30 aaaal
+r6 aaaaq
+r6 aaaar
+r11 aaaay
+r22 aaaaz
 
 #45500
 0aaaaa
 
 #46000
 1aaaaa
+b1111 aaaae
 b101010 aaaaf
-r16 aaaak
-r32 aaaal
+r8 aaaaq
+r8 aaaar
+r12 aaaay
+r24 aaaaz
 
 #46500
 0aaaaa
 
 #47000
 1aaaaa
+b10000 aaaae
 b101011 aaaaf
-0aaaaj
-1aaaau
-r2 aaaav
-r2 aaaaw
+r10 aaaaq
+r10 aaaar
+r13 aaaay
+r26 aaaaz
 
 #47500
 0aaaaa
 
 #48000
 1aaaaa
+b10001 aaaae
 b101100 aaaaf
-r4 aaaav
-r4 aaaaw
+r12 aaaaq
+r12 aaaar
+r14 aaaay
+r28 aaaaz
 
 #48500
 0aaaaa
 
 #49000
 1aaaaa
+b10010 aaaae
 b101101 aaaaf
-r6 aaaav
-r6 aaaaw
+r14 aaaaq
+r14 aaaar
+r15 aaaay
+r30 aaaaz
 
 #49500
 0aaaaa
 
 #50000
 1aaaaa
+b10011 aaaae
 b101110 aaaaf
-r8 aaaav
-r8 aaaaw
+r16 aaaaq
+r16 aaaar
+r16 aaaay
+r32 aaaaz
 
 #50500
 0aaaaa
 
 #51000
 1aaaaa
+b10100 aaaae
 b101111 aaaaf
-r10 aaaav
-r10 aaaaw
+r18 aaaaq
+r18 aaaar
+
+#51010
+0aaabb
 
 #51500
 0aaaaa
 
 #52000
 1aaaaa
+b10101 aaaae
 b110000 aaaaf
-r12 aaaav
-r12 aaaaw
+r20 aaaaq
+r20 aaaar
 
 #52500
 0aaaaa
 
 #53000
 1aaaaa
+b10110 aaaae
 b110001 aaaaf
-r14 aaaav
-r14 aaaaw
+r22 aaaaq
+r22 aaaar
 
 #53500
 0aaaaa
 
 #54000
 1aaaaa
+b10111 aaaae
 b110010 aaaaf
-r16 aaaav
-r16 aaaaw
+r24 aaaaq
+r24 aaaar
 
 #54500
 0aaaaa
 
 #55000
 1aaaaa
+b11000 aaaae
 b110011 aaaaf
-r18 aaaav
-r18 aaaaw
+r26 aaaaq
+r26 aaaar
 
 #55500
 0aaaaa
 
 #56000
 1aaaaa
+b11001 aaaae
 b110100 aaaaf
-r20 aaaav
-r20 aaaaw
+r28 aaaaq
+r28 aaaar
 
 #56500
 0aaaaa
 
 #57000
 1aaaaa
+b11010 aaaae
 b110101 aaaaf
-r22 aaaav
-r22 aaaaw
+r30 aaaaq
+r30 aaaar
 
 #57500
 0aaaaa
 
 #58000
 1aaaaa
+b11011 aaaae
 b110110 aaaaf
-r24 aaaav
-r24 aaaaw
+r32 aaaaq
+r32 aaaar
 
 #58500
 0aaaaa
 
 #59000
 1aaaaa
+b11100 aaaae
 b110111 aaaaf
-r26 aaaav
-r26 aaaaw
+r136 aaaau
+r272 aaaav
+
+#59010
+0aaaat
+1aaaax
 
 #59500
 0aaaaa
 
 #60000
 1aaaaa
+b11101 aaaae
 b111000 aaaaf
-r28 aaaav
-r28 aaaaw
+
+#60010
+0aaaax
 
 #60500
 0aaaaa
 
 #61000
 1aaaaa
+b11110 aaaae
 b111001 aaaaf
-r30 aaaav
-r30 aaaaw
+r-88.4374318740136 aaaau
+r24.21871593700677 aaaav
+
+#61010
+1aaaax
 
 #61500
 0aaaaa
 
 #62000
 1aaaaa
+b11111 aaaae
 b111010 aaaaf
-r32 aaaav
-r32 aaaaw
+
+#62010
+0aaaax
 
 #62500
 0aaaaa
 
 #63000
 1aaaaa
-1aaaac
+b100000 aaaae
 b111011 aaaaf
-0aaaau
+r-46.62741699796955 aaaau
+r3.313708498984759 aaaav
+
+#63010
+1aaaax
 
 #63500
 0aaaaa
 
 #64000
 1aaaaa
-1aaaad
-b1 aaaae
+b100001 aaaae
 b111100 aaaaf
-1aaaag
+
+#64010
+0aaaax
 
 #64500
 0aaaaa
 
 #65000
 1aaaaa
-b10 aaaae
+b100010 aaaae
 b111101 aaaaf
-1aaaah
+r-31.94569220264783 aaaau
+r-4.027153898676108 aaaav
+
+#65010
+1aaaax
 
 #65500
 0aaaaa
 
 #66000
 1aaaaa
-b11 aaaae
+b100011 aaaae
 b111110 aaaaf
+
+#66010
+0aaaax
 
 #66500
 0aaaaa
 
 #67000
 1aaaaa
-b100 aaaae
+b100100 aaaae
 b111111 aaaaf
+r272 aaaam
+r272 aaaan
+r-24.00000000000007 aaaau
+r-8.000000000000179 aaaav
+
+#67010
+1aaaap
+1aaaax
 
 #67500
 0aaaaa
 
 #68000
 1aaaaa
-b101 aaaae
+b100101 aaaae
 b1000000 aaaaf
+
+#68010
+0aaaap
+0aaaax
 
 #68500
 0aaaaa
 
 #69000
 1aaaaa
-b110 aaaae
+b100110 aaaae
 b1000001 aaaaf
+r-96.43743187401361 aaaam
+r64.43743187401357 aaaan
+r-18.69085820670884 aaaau
+r-10.65457089664566 aaaav
+
+#69010
+1aaaap
+1aaaax
 
 #69500
 0aaaaa
 
 #70000
 1aaaaa
-b111 aaaae
+b100111 aaaae
 b1000010 aaaaf
+
+#70010
+0aaaap
+0aaaax
 
 #70500
 0aaaaa
 
 #71000
 1aaaaa
-b1000 aaaae
+b101000 aaaae
 b1000011 aaaaf
+r-54.62741699796955 aaaam
+r22.62741699796953 aaaan
+r-14.62741699796957 aaaau
+r-12.68629150101534 aaaav
+
+#71010
+1aaaap
+1aaaax
 
 #71500
 0aaaaa
 
 #72000
 1aaaaa
-b1001 aaaae
+b101001 aaaae
 b1000100 aaaaf
-1aaaar
+
+#72010
+0aaaap
+0aaaax
 
 #72500
 0aaaaa
 
 #73000
 1aaaaa
-b1010 aaaae
+b101010 aaaae
 b1000101 aaaaf
-1aaaas
+r-39.94569220264785 aaaam
+r7.945692202647798 aaaan
+r-11.18259787807457 aaaau
+r-14.40870106096263 aaaav
+
+#73010
+1aaaap
+1aaaax
 
 #73500
 0aaaaa
 
 #74000
 1aaaaa
-b1011 aaaae
+b101011 aaaae
 b1000110 aaaaf
+
+#74010
+0aaaap
+0aaaax
 
 #74500
 0aaaaa
 
 #75000
 1aaaaa
-b1100 aaaae
+b101100 aaaae
 b1000111 aaaaf
+r-32.00000000000015 aaaam
+r-1.84741111297626e-13 aaaan
+r-7.999999999999872 aaaau
+r-16.00000000000007 aaaav
+
+#75010
+1aaaap
+1aaaax
 
 #75500
 0aaaaa
 
 #76000
 1aaaaa
-b1101 aaaae
+b101101 aaaae
 b1001000 aaaaf
+
+#76010
+0aaaap
+0aaaax
 
 #76500
 0aaaaa
 
 #77000
 1aaaaa
-b1110 aaaae
+b101110 aaaae
 b1001001 aaaaf
+r-26.69085820670887 aaaam
+r-5.309141793291257 aaaan
+r-4.817402121925296 aaaau
+r-17.59129893903735 aaaav
+
+#77010
+1aaaap
+1aaaax
 
 #77500
 0aaaaa
 
 #78000
 1aaaaa
-b1111 aaaae
+b101111 aaaae
 b1001010 aaaaf
+
+#78010
+0aaaap
+0aaaax
 
 #78500
 0aaaaa
 
 #79000
 1aaaaa
-b10000 aaaae
+b110000 aaaae
 b1001011 aaaaf
+r-22.62741699796962 aaaam
+r-9.372583002030577 aaaan
+r-1.372583002030318 aaaau
+r-19.3137084989848 aaaav
+
+#79010
+1aaaap
+1aaaax
 
 #79500
 0aaaaa
 
 #80000
 1aaaaa
-b10001 aaaae
+b110001 aaaae
 b1001100 aaaaf
+
+#80010
+0aaaap
+0aaaax
 
 #80500
 0aaaaa
 
 #81000
 1aaaaa
-b10010 aaaae
+b110010 aaaae
 b1001101 aaaaf
+r-19.18259787807454 aaaam
+r-12.81740212192532 aaaan
+r2.690858206708992 aaaau
+r-21.34542910335435 aaaav
+
+#81010
+1aaaap
+1aaaax
 
 #81500
 0aaaaa
 
 #82000
 1aaaaa
-b10011 aaaae
+b110011 aaaae
 b1001110 aaaaf
+
+#82010
+0aaaap
+0aaaax
 
 #82500
 0aaaaa
 
 #83000
 1aaaaa
-b10100 aaaae
+b110100 aaaae
 b1001111 aaaaf
+r-15.99999999999987 aaaam
+r-16.00000000000013 aaaan
+r7.999999999999922 aaaau
+r-24.00000000000019 aaaav
+
+#83010
+1aaaap
+1aaaax
 
 #83500
 0aaaaa
 
 #84000
 1aaaaa
-b10101 aaaae
+b110101 aaaae
 b1010000 aaaaf
+
+#84010
+0aaaap
+0aaaax
 
 #84500
 0aaaaa
 
 #85000
 1aaaaa
-b10110 aaaae
+b110110 aaaae
 b1010001 aaaaf
+r-12.81740212192529 aaaam
+r-19.1825978780747 aaaan
+r15.94569220264772 aaaau
+r-27.97284610132416 aaaav
+
+#85010
+1aaaap
+1aaaax
 
 #85500
 0aaaaa
 
 #86000
 1aaaaa
-b10111 aaaae
+b110111 aaaae
 b1010010 aaaaf
+
+#86010
+0aaaap
+0aaaax
 
 #86500
 0aaaaa
 
 #87000
 1aaaaa
-b11000 aaaae
+b111000 aaaae
 b1010011 aaaaf
+r-9.372583002030304 aaaam
+r-22.62741699796963 aaaan
+r30.62741699796971 aaaau
+r-35.31370849898454 aaaav
+
+#87010
+1aaaap
+1aaaax
 
 #87500
 0aaaaa
 
 #88000
 1aaaaa
-b11001 aaaae
+b111001 aaaae
 b1010100 aaaaf
+
+#88010
+0aaaap
+0aaaax
 
 #88500
 0aaaaa
 
 #89000
 1aaaaa
-b11010 aaaae
+b111010 aaaae
 b1010101 aaaaf
+r-5.309141793290951 aaaam
+r-26.69085820670882 aaaan
+r72.43743187401404 aaaau
+r-56.21871593700576 aaaav
+
+#89010
+1aaaap
+1aaaax
 
 #89500
 0aaaaa
 
 #90000
 1aaaaa
-b11011 aaaae
+b111011 aaaae
 b1010110 aaaaf
+
+#90010
+0aaaap
+0aaaax
 
 #90500
 0aaaaa
 
 #91000
 1aaaaa
-b11100 aaaae
+b111100 aaaae
 b1010111 aaaaf
-1aaaaq
+r-1.70530256582424e-13 aaaam
+r-32.0000000000002 aaaan
+
+#91010
+1aaaap
 
 #91500
 0aaaaa
 
 #92000
 1aaaaa
-b11101 aaaae
+b111101 aaaae
 b1011000 aaaaf
-0aaaaq
+0aaaah
+1aaaai
+
+#92010
+0aaaap
 
 #92500
 0aaaaa
 
 #93000
 1aaaaa
-b11110 aaaae
+b111110 aaaae
 b1011001 aaaaf
-1aaaaq
+r7.945692202647592 aaaam
+r-39.94569220264808 aaaan
+
+#93010
+1aaaap
 
 #93500
 0aaaaa
 
 #94000
 1aaaaa
-b11111 aaaae
+b111111 aaaae
 b1011010 aaaaf
-0aaaaq
+
+#94010
+0aaaap
 
 #94500
 0aaaaa
 
 #95000
 1aaaaa
-b100000 aaaae
+b1000000 aaaae
 b1011011 aaaaf
-1aaaaq
+r22.62741699796983 aaaam
+r-54.62741699796933 aaaan
+
+#95010
+1aaaap
 
 #95500
 0aaaaa
 
 #96000
 1aaaaa
-b100001 aaaae
+b1000001 aaaae
 b1011100 aaaaf
-0aaaaq
+
+#96010
+0aaaap
 
 #96500
 0aaaaa
 
 #97000
 1aaaaa
-b100010 aaaae
+b1000010 aaaae
 b1011101 aaaaf
-1aaaaq
+r64.43743187401455 aaaam
+r-96.43743187401253 aaaan
+
+#97010
+1aaaap
 
 #97500
 0aaaaa
 
 #98000
 1aaaaa
-b100011 aaaae
+b1000011 aaaae
 b1011110 aaaaf
-0aaaaq
+
+#98010
+0aaaap
 
 #98500
 0aaaaa
 
 #99000
 1aaaaa
-b100100 aaaae
+b1000100 aaaae
 b1011111 aaaaf
-1aaaaq
-1aaabb
 
 #99500
 0aaaaa
 
 #100000
 1aaaaa
-b100101 aaaae
+b1000101 aaaae
 b1100000 aaaaf
-0aaaaq
-0aaabb
+0aaaak
+1aaaal
 
 #100500
 0aaaaa
 
 #101000
 1aaaaa
-b100110 aaaae
+0aaaac
+b1000110 aaaae
 b1100001 aaaaf
-1aaaaq
-1aaabb
 
 #101500
 0aaaaa
 
 #102000
 1aaaaa
-b100111 aaaae
+0aaaad
+b0 aaaae
 b1100010 aaaaf
-0aaaaq
-0aaabb
+0aaaag
+0aaaaj
 
 #102500
 0aaaaa
 
 #103000
 1aaaaa
-b101000 aaaae
 b1100011 aaaaf
-1aaaaq
-1aaabb
+0aaaai
+0aaaal
 
 #103500
 0aaaaa
 
 #104000
 1aaaaa
-b101001 aaaae
 b1100100 aaaaf
-0aaaaq
-0aaabb
 
 #104500
 0aaaaa
 
 #105000
 1aaaaa
-b101010 aaaae
 b1100101 aaaaf
-1aaaaq
-1aaabb
 
 #105500
 0aaaaa
 
 #106000
 1aaaaa
-b101011 aaaae
 b1100110 aaaaf
-0aaaaq
-0aaabb
 
 #106500
 0aaaaa
 
 #107000
 1aaaaa
-b101100 aaaae
 b1100111 aaaaf
-1aaaaq
-1aaabb
 
 #107500
 0aaaaa
 
 #108000
 1aaaaa
-b101101 aaaae
 b1101000 aaaaf
-0aaaaq
-0aaabb
 
 #108500
 0aaaaa
 
 #109000
 1aaaaa
-b101110 aaaae
 b1101001 aaaaf
-1aaaaq
-1aaabb
 
 #109500
 0aaaaa
 
 #110000
 1aaaaa
-b101111 aaaae
 b1101010 aaaaf
-0aaaaq
-0aaabb
 
 #110500
 0aaaaa
 
 #111000
 1aaaaa
-b110000 aaaae
 b1101011 aaaaf
-1aaaaq
-1aaabb
 
 #111500
 0aaaaa
 
 #112000
 1aaaaa
-b110001 aaaae
 b1101100 aaaaf
-0aaaaq
-0aaabb
 
 #112500
 0aaaaa
 
 #113000
 1aaaaa
-b110010 aaaae
 b1101101 aaaaf
-1aaaaq
-1aaabb
 
 #113500
 0aaaaa
 
 #114000
 1aaaaa
-b110011 aaaae
 b1101110 aaaaf
-0aaaaq
-0aaabb
 
 #114500
 0aaaaa
 
 #115000
 1aaaaa
-b110100 aaaae
 b1101111 aaaaf
-1aaaaq
-1aaabb
 
 #115500
 0aaaaa
 
 #116000
 1aaaaa
-b110101 aaaae
 b1110000 aaaaf
-0aaaaq
-0aaabb
 
 #116500
 0aaaaa
 
 #117000
 1aaaaa
-b110110 aaaae
 b1110001 aaaaf
-1aaaaq
-1aaabb
 
 #117500
 0aaaaa
 
 #118000
 1aaaaa
-b110111 aaaae
 b1110010 aaaaf
-0aaaaq
-0aaabb
 
 #118500
 0aaaaa
 
 #119000
 1aaaaa
-b111000 aaaae
 b1110011 aaaaf
-1aaaaq
-1aaabb
 
 #119500
 0aaaaa
 
 #120000
 1aaaaa
-b111001 aaaae
 b1110100 aaaaf
-0aaaaq
-0aaabb
 
 #120500
 0aaaaa
 
 #121000
 1aaaaa
-b111010 aaaae
 b1110101 aaaaf
-1aaaaq
-1aaabb
 
 #121500
 0aaaaa
 
 #122000
 1aaaaa
-b111011 aaaae
 b1110110 aaaaf
-0aaaaq
-0aaabb
 
 #122500
 0aaaaa
 
 #123000
 1aaaaa
-b111100 aaaae
 b1110111 aaaaf
-1aaabb
 
 #123500
 0aaaaa
 
 #124000
 1aaaaa
-b111101 aaaae
 b1111000 aaaaf
-0aaaah
-1aaaai
-0aaabb
 
 #124500
 0aaaaa
 
 #125000
 1aaaaa
-b111110 aaaae
 b1111001 aaaaf
-1aaabb
 
 #125500
 0aaaaa
 
 #126000
 1aaaaa
-b111111 aaaae
 b1111010 aaaaf
-0aaabb
 
 #126500
 0aaaaa
 
 #127000
 1aaaaa
-b1000000 aaaae
 b1111011 aaaaf
-1aaabb
 
 #127500
 0aaaaa
 
 #128000
 1aaaaa
-b1000001 aaaae
+1aaaac
 b1111100 aaaaf
-0aaabb
 
 #128500
 0aaaaa
 
 #129000
 1aaaaa
-b1000010 aaaae
+1aaaad
+b1 aaaae
 b1111101 aaaaf
-1aaabb
+1aaaag
 
 #129500
 0aaaaa
 
 #130000
 1aaaaa
-b1000011 aaaae
+b10 aaaae
 b1111110 aaaaf
-0aaabb
+1aaaah
 
 #130500
 0aaaaa
 
 #131000
 1aaaaa
-b1000100 aaaae
+b11 aaaae
 b1111111 aaaaf
 
 #131500
@@ -1210,362 +1396,427 @@ b1111111 aaaaf
 
 #132000
 1aaaaa
-b1000101 aaaae
+b100 aaaae
 b10000000 aaaaf
-0aaaas
-1aaaat
+r10 aaaay
+r0 aaaaz
+
+#132010
+1aaabb
 
 #132500
 0aaaaa
 
 #133000
 1aaaaa
-0aaaac
-b1000110 aaaae
+b101 aaaae
 b10000001 aaaaf
+r11 aaaay
+r2 aaaaz
 
 #133500
 0aaaaa
 
 #134000
 1aaaaa
-0aaaad
-b0 aaaae
+b110 aaaae
 b10000010 aaaaf
-0aaaag
-0aaaar
+r12 aaaay
+r4 aaaaz
 
 #134500
 0aaaaa
 
 #135000
 1aaaaa
+b111 aaaae
 b10000011 aaaaf
-0aaaai
-1aaaam
-r136 aaaan
-r272 aaaao
-r304.1052449399714 aaaap
-0aaaat
+r13 aaaay
+r6 aaaaz
 
 #135500
 0aaaaa
 
 #136000
 1aaaaa
+b1000 aaaae
 b10000100 aaaaf
-r-88 aaaan
-r24 aaaao
-r91.21403400793103 aaaap
+r14 aaaay
+r8 aaaaz
 
 #136500
 0aaaaa
 
 #137000
 1aaaaa
+b1001 aaaae
 b10000101 aaaaf
-r-47 aaaan
-r3 aaaao
-r47.09564735726646 aaaap
+1aaaaj
+r15 aaaay
+r10 aaaaz
 
 #137500
 0aaaaa
 
 #138000
 1aaaaa
+b1010 aaaae
 b10000110 aaaaf
-r-32 aaaan
-r-4 aaaao
-r32.2490309931942 aaaap
+1aaaak
+r16 aaaay
+r12 aaaaz
 
 #138500
 0aaaaa
 
 #139000
 1aaaaa
+b1011 aaaae
 b10000111 aaaaf
-r-24 aaaan
-r-8 aaaao
-r25.29822128134704 aaaap
+r17 aaaay
+r14 aaaaz
 
 #139500
 0aaaaa
 
 #140000
 1aaaaa
+b1100 aaaae
 b10001000 aaaaf
-r-19 aaaan
-r-11 aaaao
-r21.95449840010015 aaaap
+r20 aaaaq
+r0 aaaar
+r18 aaaay
+r16 aaaaz
+
+#140010
+1aaaat
 
 #140500
 0aaaaa
 
 #141000
 1aaaaa
+b1101 aaaae
 b10001001 aaaaf
-r-15 aaaan
-r-13 aaaao
-r19.84943324127921 aaaap
+r21 aaaaq
+r2 aaaar
+r19 aaaay
+r18 aaaaz
 
 #141500
 0aaaaa
 
 #142000
 1aaaaa
+b1110 aaaae
 b10001010 aaaaf
-r-11 aaaan
-r-14 aaaao
-r17.80449381476486 aaaap
+r22 aaaaq
+r4 aaaar
+r20 aaaay
+r20 aaaaz
 
 #142500
 0aaaaa
 
 #143000
 1aaaaa
+b1111 aaaae
 b10001011 aaaaf
-r-8 aaaan
-r-16 aaaao
-r17.88854381999832 aaaap
+r23 aaaaq
+r6 aaaar
+r21 aaaay
+r22 aaaaz
 
 #143500
 0aaaaa
 
 #144000
 1aaaaa
+b10000 aaaae
 b10001100 aaaaf
-r-5 aaaan
-r-18 aaaao
-r18.68154169226941 aaaap
+r24 aaaaq
+r8 aaaar
+r22 aaaay
+r24 aaaaz
 
 #144500
 0aaaaa
 
 #145000
 1aaaaa
+b10001 aaaae
 b10001101 aaaaf
-r-1 aaaan
-r-19 aaaao
-r19.02629759044045 aaaap
+r25 aaaaq
+r10 aaaar
+r23 aaaay
+r26 aaaaz
 
 #145500
 0aaaaa
 
 #146000
 1aaaaa
+b10010 aaaae
 b10001110 aaaaf
-r3 aaaan
-r-21 aaaao
-r21.21320343559643 aaaap
+r26 aaaaq
+r12 aaaar
+r24 aaaay
+r28 aaaaz
 
 #146500
 0aaaaa
 
 #147000
 1aaaaa
+b10011 aaaae
 b10001111 aaaaf
-r8 aaaan
-r-24 aaaao
-r25.29822128134704 aaaap
+r27 aaaaq
+r14 aaaar
+r25 aaaay
+r30 aaaaz
 
 #147500
 0aaaaa
 
 #148000
 1aaaaa
+b10100 aaaae
 b10010000 aaaaf
-r16 aaaan
-r-28 aaaao
-r32.2490309931942 aaaap
+r28 aaaaq
+r16 aaaar
+r15 aaaay
+r0 aaaaz
 
 #148500
 0aaaaa
 
 #149000
 1aaaaa
+b10101 aaaae
 b10010001 aaaaf
-r31 aaaan
-r-35 aaaao
-r46.75467891024384 aaaap
+r29 aaaaq
+r18 aaaar
+r16 aaaay
+r2 aaaaz
+
+#149010
+0aaaba
 
 #149500
 0aaaaa
 
 #150000
 1aaaaa
+b10110 aaaae
 b10010010 aaaaf
-r72 aaaan
-r-56 aaaao
-r91.21403400793103 aaaap
+r30 aaaaq
+r20 aaaar
 
 #150500
 0aaaaa
 
 #151000
 1aaaaa
+b10111 aaaae
 b10010011 aaaaf
-0aaaam
-1aaaax
-r272 aaaay
-r272 aaaaz
-r384.6660889654818 aaaba
+r31 aaaaq
+r22 aaaar
 
 #151500
 0aaaaa
 
 #152000
 1aaaaa
+b11000 aaaae
 b10010100 aaaaf
-r-96 aaaay
-r64 aaaaz
-r115.3776408148477 aaaba
+r32 aaaaq
+r24 aaaar
 
 #152500
 0aaaaa
 
 #153000
 1aaaaa
+b11001 aaaae
 b10010101 aaaaf
-r-55 aaaay
-r23 aaaaz
-r59.61543424315552 aaaba
+r33 aaaaq
+r26 aaaar
 
 #153500
 0aaaaa
 
 #154000
 1aaaaa
+b11010 aaaae
 b10010110 aaaaf
-r-40 aaaay
-r8 aaaaz
-r40.79215610874228 aaaba
+r34 aaaaq
+r28 aaaar
 
 #154500
 0aaaaa
 
 #155000
 1aaaaa
+b11011 aaaae
 b10010111 aaaaf
-r-32 aaaay
-r0 aaaaz
-r32 aaaba
+r35 aaaaq
+r30 aaaar
 
 #155500
 0aaaaa
 
 #156000
 1aaaaa
+b11100 aaaae
 b10011000 aaaaf
-r-27 aaaay
-r-5 aaaaz
-r27.45906043549196 aaaba
+r25 aaaaq
+r0 aaaar
+r280 aaaau
+r240 aaaav
+
+#156010
+1aaaax
 
 #156500
 0aaaaa
 
 #157000
 1aaaaa
+b11101 aaaae
 b10011001 aaaaf
-r-23 aaaay
-r-9 aaaaz
-r24.69817807045694 aaaba
+r26 aaaaq
+r2 aaaar
+
+#157010
+0aaaas
+0aaaax
 
 #157500
 0aaaaa
 
 #158000
 1aaaaa
+b11110 aaaae
 b10011010 aaaaf
-r-19 aaaay
-r-13 aaaaz
-r23.02172886644268 aaaba
+r-88.4374318740136 aaaau
+r24.21871593700679 aaaav
+
+#158010
+1aaaax
 
 #158500
 0aaaaa
 
 #159000
 1aaaaa
+b11111 aaaae
 b10011011 aaaaf
-r-16 aaaay
-r-16 aaaaz
-r22.62741699796952 aaaba
+
+#159010
+0aaaax
 
 #159500
 0aaaaa
 
 #160000
 1aaaaa
+b100000 aaaae
 b10011100 aaaaf
-r-13 aaaay
-r-19 aaaaz
-r23.02172886644268 aaaba
+r-46.62741699796955 aaaau
+r3.313708498984774 aaaav
+
+#160010
+1aaaax
 
 #160500
 0aaaaa
 
 #161000
 1aaaaa
+b100001 aaaae
 b10011101 aaaaf
-r-9 aaaay
-r-23 aaaaz
-r24.69817807045694 aaaba
+
+#161010
+0aaaax
 
 #161500
 0aaaaa
 
 #162000
 1aaaaa
+b100010 aaaae
 b10011110 aaaaf
-r-5 aaaay
-r-27 aaaaz
-r27.45906043549196 aaaba
+r-31.94569220264784 aaaau
+r-4.027153898676104 aaaav
+
+#162010
+1aaaax
 
 #162500
 0aaaaa
 
 #163000
 1aaaaa
+b100011 aaaae
 b10011111 aaaaf
-r0 aaaay
-r-32 aaaaz
-r32 aaaba
+
+#163010
+0aaaax
 
 #163500
 0aaaaa
 
 #164000
 1aaaaa
+b100100 aaaae
 b10100000 aaaaf
-r8 aaaay
-r-40 aaaaz
-r40.79215610874228 aaaba
+r440 aaaam
+r240 aaaan
+r-24.00000000000012 aaaau
+r-8.000000000000167 aaaav
+
+#164010
+1aaaap
+1aaaax
 
 #164500
 0aaaaa
 
 #165000
 1aaaaa
+b100101 aaaae
 b10100001 aaaaf
-r23 aaaay
-r-55 aaaaz
-r59.61543424315552 aaaba
+
+#165010
+0aaaap
+0aaaax
 
 #165500
 0aaaaa
 
 #166000
 1aaaaa
+b100110 aaaae
 b10100010 aaaaf
-r64 aaaay
-r-96 aaaaz
-r115.3776408148477 aaaba
+r-88.43743187401361 aaaam
+r24.21871593700679 aaaan
+r-18.69085820670886 aaaau
+r-10.65457089664564 aaaav
+
+#166010
+1aaaap
+1aaaax
 
 #166500
 0aaaaa
 
 #167000
 1aaaaa
+b100111 aaaae
 b10100011 aaaaf
+
+#167010
+0aaaap
 0aaaax
 
 #167500
@@ -1573,788 +1824,1168 @@ b10100011 aaaaf
 
 #168000
 1aaaaa
+b101000 aaaae
 b10100100 aaaaf
+r-46.62741699796955 aaaam
+r3.313708498984781 aaaan
+r-14.62741699796961 aaaau
+r-12.68629150101533 aaaav
+
+#168010
+1aaaap
+1aaaax
 
 #168500
 0aaaaa
 
 #169000
 1aaaaa
+b101001 aaaae
 b10100101 aaaaf
+
+#169010
+0aaaap
+0aaaax
 
 #169500
 0aaaaa
 
 #170000
 1aaaaa
+b101010 aaaae
 b10100110 aaaaf
+r-31.94569220264785 aaaam
+r-4.027153898676097 aaaan
+r-11.18259787807454 aaaau
+r-14.4087010609626 aaaav
+
+#170010
+1aaaap
+1aaaax
 
 #170500
 0aaaaa
 
 #171000
 1aaaaa
+b101011 aaaae
 b10100111 aaaaf
+
+#171010
+0aaaap
+0aaaax
 
 #171500
 0aaaaa
 
 #172000
 1aaaaa
+b101100 aaaae
 b10101000 aaaaf
+r-24.00000000000019 aaaam
+r-8.000000000000163 aaaan
+r-7.999999999999879 aaaau
+r-16.0000000000001 aaaav
+
+#172010
+1aaaap
+1aaaax
 
 #172500
 0aaaaa
 
 #173000
 1aaaaa
+b101101 aaaae
 b10101001 aaaaf
+
+#173010
+0aaaap
+0aaaax
 
 #173500
 0aaaaa
 
 #174000
 1aaaaa
+b101110 aaaae
 b10101010 aaaaf
+r-18.69085820670888 aaaam
+r-10.65457089664562 aaaan
+r-4.817402121925308 aaaau
+r-17.59129893903741 aaaav
+
+#174010
+1aaaap
+1aaaax
 
 #174500
 0aaaaa
 
 #175000
 1aaaaa
+b101111 aaaae
 b10101011 aaaaf
+
+#175010
+0aaaap
+0aaaax
 
 #175500
 0aaaaa
 
 #176000
 1aaaaa
+b110000 aaaae
 b10101100 aaaaf
+r-14.62741699796965 aaaam
+r-12.68629150101533 aaaan
+r-1.372583002030328 aaaau
+r-19.31370849898485 aaaav
+
+#176010
+1aaaap
+1aaaax
 
 #176500
 0aaaaa
 
 #177000
 1aaaaa
+b110001 aaaae
 b10101101 aaaaf
+
+#177010
+0aaaap
+0aaaax
 
 #177500
 0aaaaa
 
 #178000
 1aaaaa
+b110010 aaaae
 b10101110 aaaaf
+r-11.18259787807451 aaaam
+r-14.40870106096258 aaaan
+r2.690858206709027 aaaau
+r-21.3454291033544 aaaav
+
+#178010
+1aaaap
+1aaaax
 
 #178500
 0aaaaa
 
 #179000
 1aaaaa
+b110011 aaaae
 b10101111 aaaaf
+
+#179010
+0aaaap
+0aaaax
 
 #179500
 0aaaaa
 
 #180000
 1aaaaa
+b110100 aaaae
 b10110000 aaaaf
+r-7.999999999999872 aaaam
+r-16.00000000000016 aaaan
+r7.999999999999829 aaaau
+r-24.00000000000018 aaaav
+
+#180010
+1aaaap
+1aaaax
 
 #180500
 0aaaaa
 
 #181000
 1aaaaa
+b110101 aaaae
 b10110001 aaaaf
+
+#181010
+0aaaap
+0aaaax
 
 #181500
 0aaaaa
 
 #182000
 1aaaaa
+b110110 aaaae
 b10110010 aaaaf
+r-4.817402121925298 aaaam
+r-17.59129893903748 aaaan
+r15.94569220264767 aaaau
+r-27.97284610132415 aaaav
+
+#182010
+1aaaap
+1aaaax
 
 #182500
 0aaaaa
 
 #183000
 1aaaaa
+b110111 aaaae
 b10110011 aaaaf
+
+#183010
+0aaaap
+0aaaax
 
 #183500
 0aaaaa
 
 #184000
 1aaaaa
+b111000 aaaae
 b10110100 aaaaf
+r-1.372583002030339 aaaam
+r-19.3137084989849 aaaan
+r30.62741699796977 aaaau
+r-35.31370849898458 aaaav
+
+#184010
+1aaaap
+1aaaax
 
 #184500
 0aaaaa
 
 #185000
 1aaaaa
+b111001 aaaae
 b10110101 aaaaf
+
+#185010
+0aaaap
+0aaaax
 
 #185500
 0aaaaa
 
 #186000
 1aaaaa
+b111010 aaaae
 b10110110 aaaaf
+r2.690858206709043 aaaam
+r-21.34542910335445 aaaan
+r72.43743187401427 aaaau
+r-56.21871593700589 aaaav
+
+#186010
+1aaaap
+1aaaax
 
 #186500
 0aaaaa
 
 #187000
 1aaaaa
+b111011 aaaae
 b10110111 aaaaf
+
+#187010
+0aaaap
+0aaaax
+1aaaba
 
 #187500
 0aaaaa
 
 #188000
 1aaaaa
+b111100 aaaae
 b10111000 aaaaf
+r7.999999999999741 aaaam
+r-24.0000000000002 aaaan
+r17 aaaay
+r4 aaaaz
+
+#188010
+1aaaap
 
 #188500
 0aaaaa
 
 #189000
 1aaaaa
+b111101 aaaae
 b10111001 aaaaf
+r18 aaaay
+r6 aaaaz
+
+#189010
+0aaaap
 
 #189500
 0aaaaa
 
 #190000
 1aaaaa
+b111110 aaaae
 b10111010 aaaaf
+r15.94569220264763 aaaam
+r-27.97284610132417 aaaan
+r19 aaaay
+r8 aaaaz
+
+#190010
+1aaaap
 
 #190500
 0aaaaa
 
 #191000
 1aaaaa
+b111111 aaaae
 b10111011 aaaaf
+r20 aaaay
+r10 aaaaz
+
+#191010
+0aaaap
 
 #191500
 0aaaaa
 
 #192000
 1aaaaa
-1aaaac
+b1000000 aaaae
 b10111100 aaaaf
+r30.62741699796987 aaaam
+r-35.31370849898458 aaaan
+r21 aaaay
+r12 aaaaz
+
+#192010
+1aaaap
 
 #192500
 0aaaaa
 
 #193000
 1aaaaa
-1aaaad
-b1 aaaae
+b1000001 aaaae
 b10111101 aaaaf
-1aaaag
+r22 aaaay
+r14 aaaaz
+
+#193010
+0aaaap
 
 #193500
 0aaaaa
 
 #194000
 1aaaaa
-b10 aaaae
+b1000010 aaaae
 b10111110 aaaaf
-1aaaah
+r72.43743187401458 aaaam
+r-56.21871593700597 aaaan
+r23 aaaay
+r16 aaaaz
+
+#194010
+1aaaap
 
 #194500
 0aaaaa
 
 #195000
 1aaaaa
-b11 aaaae
+b1000011 aaaae
 b10111111 aaaaf
+r24 aaaay
+r18 aaaaz
+
+#195010
+0aaaap
+1aaaas
 
 #195500
 0aaaaa
 
 #196000
 1aaaaa
-b100 aaaae
+b1000100 aaaae
 b11000000 aaaaf
+r27 aaaaq
+r4 aaaar
+r25 aaaay
+r20 aaaaz
 
 #196500
 0aaaaa
 
 #197000
 1aaaaa
-b101 aaaae
+b1000101 aaaae
 b11000001 aaaaf
+r28 aaaaq
+r6 aaaar
+r26 aaaay
+r22 aaaaz
 
 #197500
 0aaaaa
 
 #198000
 1aaaaa
-b110 aaaae
+b1000110 aaaae
 b11000010 aaaaf
+r29 aaaaq
+r8 aaaar
+r27 aaaay
+r24 aaaaz
 
 #198500
 0aaaaa
 
 #199000
 1aaaaa
-b111 aaaae
+b1000111 aaaae
 b11000011 aaaaf
+r30 aaaaq
+r10 aaaar
+r28 aaaay
+r26 aaaaz
 
 #199500
 0aaaaa
 
 #200000
 1aaaaa
-b1000 aaaae
+b1001000 aaaae
 b11000100 aaaaf
+r31 aaaaq
+r12 aaaar
+r29 aaaay
+r28 aaaaz
 
 #200500
 0aaaaa
 
 #201000
 1aaaaa
-b1001 aaaae
+b1001001 aaaae
 b11000101 aaaaf
-1aaaar
+r32 aaaaq
+r14 aaaar
+r30 aaaay
+r30 aaaaz
 
 #201500
 0aaaaa
 
 #202000
 1aaaaa
-b1010 aaaae
+b1001010 aaaae
 b11000110 aaaaf
-1aaaas
+r33 aaaaq
+r16 aaaar
+
+#202010
+0aaabb
 
 #202500
 0aaaaa
 
 #203000
 1aaaaa
-b1011 aaaae
+b1001011 aaaae
 b11000111 aaaaf
+r34 aaaaq
+r18 aaaar
 
 #203500
 0aaaaa
 
 #204000
 1aaaaa
-b1100 aaaae
+b1001100 aaaae
 b11001000 aaaaf
+r35 aaaaq
+r20 aaaar
 
 #204500
 0aaaaa
 
 #205000
 1aaaaa
-b1101 aaaae
+b1001101 aaaae
 b11001001 aaaaf
+r36 aaaaq
+r22 aaaar
 
 #205500
 0aaaaa
 
 #206000
 1aaaaa
-b1110 aaaae
+b1001110 aaaae
 b11001010 aaaaf
+r37 aaaaq
+r24 aaaar
 
 #206500
 0aaaaa
 
 #207000
 1aaaaa
-b1111 aaaae
+b1001111 aaaae
 b11001011 aaaaf
+r38 aaaaq
+r26 aaaar
 
 #207500
 0aaaaa
 
 #208000
 1aaaaa
-b10000 aaaae
+b1010000 aaaae
 b11001100 aaaaf
+r39 aaaaq
+r28 aaaar
 
 #208500
 0aaaaa
 
 #209000
 1aaaaa
-b10001 aaaae
+b1010001 aaaae
 b11001101 aaaaf
+r40 aaaaq
+r30 aaaar
 
 #209500
 0aaaaa
 
 #210000
 1aaaaa
-b10010 aaaae
+b1010010 aaaae
 b11001110 aaaaf
+r360 aaaau
+r240 aaaav
+
+#210010
+0aaaat
+1aaaax
 
 #210500
 0aaaaa
 
 #211000
 1aaaaa
-b10011 aaaae
+b1010011 aaaae
 b11001111 aaaaf
+
+#211010
+0aaaax
 
 #211500
 0aaaaa
 
 #212000
 1aaaaa
-b10100 aaaae
+b1010100 aaaae
 b11010000 aaaaf
+r-88.4374318740136 aaaau
+r24.21871593700677 aaaav
+
+#212010
+1aaaax
 
 #212500
 0aaaaa
 
 #213000
 1aaaaa
-b10101 aaaae
+b1010101 aaaae
 b11010001 aaaaf
+
+#213010
+0aaaax
 
 #213500
 0aaaaa
 
 #214000
 1aaaaa
-b10110 aaaae
+b1010110 aaaae
 b11010010 aaaaf
+r-46.62741699796955 aaaau
+r3.313708498984766 aaaav
+
+#214010
+1aaaax
 
 #214500
 0aaaaa
 
 #215000
 1aaaaa
-b10111 aaaae
+b1010111 aaaae
 b11010011 aaaaf
+
+#215010
+0aaaax
 
 #215500
 0aaaaa
 
 #216000
 1aaaaa
-b11000 aaaae
+b1011000 aaaae
 b11010100 aaaaf
+r-31.94569220264786 aaaau
+r-4.02715389867609 aaaav
+
+#216010
+1aaaax
 
 #216500
 0aaaaa
 
 #217000
 1aaaaa
-b11001 aaaae
+b1011001 aaaae
 b11010101 aaaaf
+
+#217010
+0aaaax
 
 #217500
 0aaaaa
 
 #218000
 1aaaaa
-b11010 aaaae
+b1011010 aaaae
 b11010110 aaaaf
+r520 aaaam
+r240 aaaan
+r-24.00000000000016 aaaau
+r-8.000000000000167 aaaav
+
+#218010
+1aaaap
+1aaaax
 
 #218500
 0aaaaa
 
 #219000
 1aaaaa
-b11011 aaaae
+b1011011 aaaae
 b11010111 aaaaf
+
+#219010
+0aaaap
+0aaaax
 
 #219500
 0aaaaa
 
 #220000
 1aaaaa
-b11100 aaaae
+b1011100 aaaae
 b11011000 aaaaf
-1aaaaq
+r-88.43743187401361 aaaam
+r24.21871593700679 aaaan
+r-18.69085820670887 aaaau
+r-10.65457089664562 aaaav
+
+#220010
+1aaaap
+1aaaax
 
 #220500
 0aaaaa
 
 #221000
 1aaaaa
-b11101 aaaae
+b1011101 aaaae
 b11011001 aaaaf
-0aaaaq
+
+#221010
+0aaaap
+0aaaax
 
 #221500
 0aaaaa
 
 #222000
 1aaaaa
-b11110 aaaae
+b1011110 aaaae
 b11011010 aaaaf
-1aaaaq
+r-46.62741699796956 aaaam
+r3.313708498984788 aaaan
+r-14.62741699796963 aaaau
+r-12.68629150101533 aaaav
+
+#222010
+1aaaap
+1aaaax
 
 #222500
 0aaaaa
 
 #223000
 1aaaaa
-b11111 aaaae
+b1011111 aaaae
 b11011011 aaaaf
-0aaaaq
+
+#223010
+0aaaap
+0aaaax
 
 #223500
 0aaaaa
 
 #224000
 1aaaaa
-b100000 aaaae
+b1100000 aaaae
 b11011100 aaaaf
-1aaaaq
+r-31.94569220264786 aaaam
+r-4.027153898676104 aaaan
+r-11.18259787807453 aaaau
+r-14.40870106096259 aaaav
+
+#224010
+1aaaap
+1aaaax
 
 #224500
 0aaaaa
 
 #225000
 1aaaaa
-b100001 aaaae
+b1100001 aaaae
 b11011101 aaaaf
-0aaaaq
+
+#225010
+0aaaap
+0aaaax
 
 #225500
 0aaaaa
 
 #226000
 1aaaaa
-b100010 aaaae
+b1100010 aaaae
 b11011110 aaaaf
-1aaaaq
+r-24.00000000000021 aaaam
+r-8.000000000000163 aaaan
+r-7.999999999999872 aaaau
+r-16.00000000000013 aaaav
+
+#226010
+1aaaap
+1aaaax
 
 #226500
 0aaaaa
 
 #227000
 1aaaaa
-b100011 aaaae
+b1100011 aaaae
 b11011111 aaaaf
-0aaaaq
+
+#227010
+0aaaap
+0aaaax
 
 #227500
 0aaaaa
 
 #228000
 1aaaaa
-b100100 aaaae
+b1100100 aaaae
 b11100000 aaaaf
-1aaaaq
-1aaabb
+r-18.6908582067089 aaaam
+r-10.65457089664559 aaaan
+r-4.817402121925305 aaaau
+r-17.59129893903744 aaaav
+
+#228010
+1aaaap
+1aaaax
 
 #228500
 0aaaaa
 
 #229000
 1aaaaa
-b100101 aaaae
+b1100101 aaaae
 b11100001 aaaaf
-0aaaaq
-0aaabb
+
+#229010
+0aaaap
+0aaaax
 
 #229500
 0aaaaa
 
 #230000
 1aaaaa
-b100110 aaaae
+b1100110 aaaae
 b11100010 aaaaf
-1aaaaq
-1aaabb
+r-14.62741699796966 aaaam
+r-12.68629150101532 aaaan
+r-1.372583002030339 aaaau
+r-19.31370849898488 aaaav
+
+#230010
+1aaaap
+1aaaax
 
 #230500
 0aaaaa
 
 #231000
 1aaaaa
-b100111 aaaae
+b1100111 aaaae
 b11100011 aaaaf
-0aaaaq
-0aaabb
+
+#231010
+0aaaap
+0aaaax
 
 #231500
 0aaaaa
 
 #232000
 1aaaaa
-b101000 aaaae
+b1101000 aaaae
 b11100100 aaaaf
-1aaaaq
-1aaabb
+r-11.18259787807449 aaaam
+r-14.40870106096255 aaaan
+r2.690858206709031 aaaau
+r-21.34542910335442 aaaav
+
+#232010
+1aaaap
+1aaaax
 
 #232500
 0aaaaa
 
 #233000
 1aaaaa
-b101001 aaaae
+b1101001 aaaae
 b11100101 aaaaf
-0aaaaq
-0aaabb
+
+#233010
+0aaaap
+0aaaax
 
 #233500
 0aaaaa
 
 #234000
 1aaaaa
-b101010 aaaae
+b1101010 aaaae
 b11100110 aaaaf
-1aaaaq
-1aaabb
+r-7.999999999999869 aaaam
+r-16.00000000000018 aaaan
+r7.999999999999783 aaaau
+r-24.00000000000018 aaaav
+
+#234010
+1aaaap
+1aaaax
 
 #234500
 0aaaaa
 
 #235000
 1aaaaa
-b101011 aaaae
+b1101011 aaaae
 b11100111 aaaaf
-0aaaaq
-0aaabb
+
+#235010
+0aaaap
+0aaaax
 
 #235500
 0aaaaa
 
 #236000
 1aaaaa
-b101100 aaaae
+b1101100 aaaae
 b11101000 aaaaf
-1aaaaq
-1aaabb
+r-4.817402121925312 aaaam
+r-17.5912989390375 aaaan
+r15.94569220264766 aaaau
+r-27.97284610132418 aaaav
+
+#236010
+1aaaap
+1aaaax
 
 #236500
 0aaaaa
 
 #237000
 1aaaaa
-b101101 aaaae
+b1101101 aaaae
 b11101001 aaaaf
-0aaaaq
-0aaabb
+
+#237010
+0aaaap
+0aaaax
 
 #237500
 0aaaaa
 
 #238000
 1aaaaa
-b101110 aaaae
+b1101110 aaaae
 b11101010 aaaaf
-1aaaaq
-1aaabb
+r-1.372583002030346 aaaam
+r-19.31370849898492 aaaan
+r30.62741699796983 aaaau
+r-35.31370849898457 aaaav
+
+#238010
+1aaaap
+1aaaax
 
 #238500
 0aaaaa
 
 #239000
 1aaaaa
-b101111 aaaae
+b1101111 aaaae
 b11101011 aaaaf
-0aaaaq
-0aaabb
+
+#239010
+0aaaap
+0aaaax
 
 #239500
 0aaaaa
 
 #240000
 1aaaaa
-b110000 aaaae
+b1110000 aaaae
 b11101100 aaaaf
-1aaaaq
-1aaabb
+r2.690858206709059 aaaam
+r-21.34542910335448 aaaan
+r72.43743187401444 aaaau
+r-56.21871593700594 aaaav
+
+#240010
+1aaaap
+1aaaax
 
 #240500
 0aaaaa
 
 #241000
 1aaaaa
-b110001 aaaae
+b1110001 aaaae
 b11101101 aaaaf
-0aaaaq
-0aaabb
+
+#241010
+0aaaap
+0aaaax
 
 #241500
 0aaaaa
 
 #242000
 1aaaaa
-b110010 aaaae
+b1110010 aaaae
 b11101110 aaaaf
-1aaaaq
-1aaabb
+r7.999999999999694 aaaam
+r-24.00000000000021 aaaan
+
+#242010
+1aaaap
 
 #242500
 0aaaaa
 
 #243000
 1aaaaa
-b110011 aaaae
+b1110011 aaaae
 b11101111 aaaaf
-0aaaaq
-0aaabb
+0aaaah
+1aaaai
+
+#243010
+0aaaap
 
 #243500
 0aaaaa
 
 #244000
 1aaaaa
-b110100 aaaae
+b1110100 aaaae
 b11110000 aaaaf
-1aaaaq
-1aaabb
+r15.94569220264761 aaaam
+r-27.97284610132418 aaaan
+
+#244010
+1aaaap
 
 #244500
 0aaaaa
 
 #245000
 1aaaaa
-b110101 aaaae
+b1110101 aaaae
 b11110001 aaaaf
-0aaaaq
-0aaabb
+
+#245010
+0aaaap
 
 #245500
 0aaaaa
 
 #246000
 1aaaaa
-b110110 aaaae
+b1110110 aaaae
 b11110010 aaaaf
-1aaaaq
-1aaabb
+r30.6274169979699 aaaam
+r-35.31370849898459 aaaan
+
+#246010
+1aaaap
 
 #246500
 0aaaaa
 
 #247000
 1aaaaa
-b110111 aaaae
+b1110111 aaaae
 b11110011 aaaaf
-0aaaaq
-0aaabb
+
+#247010
+0aaaap
 
 #247500
 0aaaaa
 
 #248000
 1aaaaa
-b111000 aaaae
+b1111000 aaaae
 b11110100 aaaaf
-1aaaaq
-1aaabb
+r72.43743187401472 aaaam
+r-56.21871593700602 aaaan
+
+#248010
+1aaaap
 
 #248500
 0aaaaa
 
 #249000
 1aaaaa
-b111001 aaaae
+b1111001 aaaae
 b11110101 aaaaf
-0aaaaq
-0aaabb
+
+#249010
+0aaaap
 
 #249500
 0aaaaa
 
 #250000
 1aaaaa
-b111010 aaaae
+b1111010 aaaae
 b11110110 aaaaf
-1aaaaq
-1aaabb
 
 #250500
 0aaaaa
 
 #251000
 1aaaaa
-b111011 aaaae
+b1111011 aaaae
 b11110111 aaaaf
-0aaaaq
-0aaabb
+0aaaak
+1aaaal
 
 #251500
 0aaaaa
 
 #252000
 1aaaaa
-b111100 aaaae
+0aaaac
+b1111100 aaaae
 b11111000 aaaaf
-1aaabb
 
 #252500
 0aaaaa
 
 #253000
 1aaaaa
-b111101 aaaae
+0aaaad
+b0 aaaae
 b11111001 aaaaf
-0aaabb
+0aaaag
+0aaaaj
 
 #253500
 0aaaaa
 
 #254000
 1aaaaa
-b111110 aaaae
 b11111010 aaaaf
-1aaabb
+0aaaai
+0aaaal
 
 #254500
 0aaaaa
 
 #255000
 1aaaaa
-b111111 aaaae
 b11111011 aaaaf
-0aaabb
 
 #255500
 0aaaaa
 
 #256000
 1aaaaa
-b1000000 aaaae
 b11111100 aaaaf
-1aaabb
 
 #256500
 0aaaaa
 
 #257000
 1aaaaa
-b1000001 aaaae
 b11111101 aaaaf
-0aaabb
 
 #257500
 0aaaaa
 
 #258000
 1aaaaa
-b1000010 aaaae
 b11111110 aaaaf
-1aaabb
 
 #258500
 0aaaaa
 
 #259000
 1aaaaa
-b1000011 aaaae
 b11111111 aaaaf
-0aaabb
 
 #259500
 0aaaaa
 
 #260000
 1aaaaa
-b1000100 aaaae
 b100000000 aaaaf
 
 #260500
@@ -2362,7 +2993,6 @@ b100000000 aaaaf
 
 #261000
 1aaaaa
-b1000101 aaaae
 b100000001 aaaaf
 
 #261500
@@ -2370,7 +3000,6 @@ b100000001 aaaaf
 
 #262000
 1aaaaa
-b1000110 aaaae
 b100000010 aaaaf
 
 #262500
@@ -2378,7 +3007,6 @@ b100000010 aaaaf
 
 #263000
 1aaaaa
-b1000111 aaaae
 b100000011 aaaaf
 
 #263500
@@ -2386,7 +3014,6 @@ b100000011 aaaaf
 
 #264000
 1aaaaa
-b1001000 aaaae
 b100000100 aaaaf
 
 #264500
@@ -2394,7 +3021,6 @@ b100000100 aaaaf
 
 #265000
 1aaaaa
-b1001001 aaaae
 b100000101 aaaaf
 
 #265500
@@ -2402,7 +3028,6 @@ b100000101 aaaaf
 
 #266000
 1aaaaa
-b1001010 aaaae
 b100000110 aaaaf
 
 #266500
@@ -2410,7 +3035,6 @@ b100000110 aaaaf
 
 #267000
 1aaaaa
-b1001011 aaaae
 b100000111 aaaaf
 
 #267500
@@ -2418,7 +3042,6 @@ b100000111 aaaaf
 
 #268000
 1aaaaa
-b1001100 aaaae
 b100001000 aaaaf
 
 #268500
@@ -2426,7 +3049,6 @@ b100001000 aaaaf
 
 #269000
 1aaaaa
-b1001101 aaaae
 b100001001 aaaaf
 
 #269500
@@ -2434,7 +3056,6 @@ b100001001 aaaaf
 
 #270000
 1aaaaa
-b1001110 aaaae
 b100001010 aaaaf
 
 #270500
@@ -2442,7 +3063,6 @@ b100001010 aaaaf
 
 #271000
 1aaaaa
-b1001111 aaaae
 b100001011 aaaaf
 
 #271500
@@ -2450,7 +3070,6 @@ b100001011 aaaaf
 
 #272000
 1aaaaa
-b1010000 aaaae
 b100001100 aaaaf
 
 #272500
@@ -2458,7 +3077,6 @@ b100001100 aaaaf
 
 #273000
 1aaaaa
-b1010001 aaaae
 b100001101 aaaaf
 
 #273500
@@ -2466,251 +3084,266 @@ b100001101 aaaaf
 
 #274000
 1aaaaa
-b1010010 aaaae
 b100001110 aaaaf
-1aaaaq
 
 #274500
 0aaaaa
 
 #275000
 1aaaaa
-b1010011 aaaae
 b100001111 aaaaf
-0aaaaq
 
 #275500
 0aaaaa
 
 #276000
 1aaaaa
-b1010100 aaaae
 b100010000 aaaaf
-1aaaaq
 
 #276500
 0aaaaa
 
 #277000
 1aaaaa
-b1010101 aaaae
 b100010001 aaaaf
-0aaaaq
 
 #277500
 0aaaaa
 
 #278000
 1aaaaa
-b1010110 aaaae
 b100010010 aaaaf
-1aaaaq
 
 #278500
 0aaaaa
 
 #279000
 1aaaaa
-b1010111 aaaae
+1aaaac
 b100010011 aaaaf
-0aaaaq
 
 #279500
 0aaaaa
 
 #280000
 1aaaaa
-b1011000 aaaae
+1aaaad
+b1 aaaae
 b100010100 aaaaf
-1aaaaq
+1aaaag
 
 #280500
 0aaaaa
 
 #281000
 1aaaaa
-b1011001 aaaae
+b10 aaaae
 b100010101 aaaaf
-0aaaaq
+1aaaah
 
 #281500
 0aaaaa
 
 #282000
 1aaaaa
-b1011010 aaaae
+b11 aaaae
 b100010110 aaaaf
-1aaaaq
-1aaabb
 
 #282500
 0aaaaa
 
 #283000
 1aaaaa
-b1011011 aaaae
+b100 aaaae
 b100010111 aaaaf
-0aaaaq
-0aaabb
+r3 aaaay
+r1 aaaaz
+
+#283010
+1aaabb
 
 #283500
 0aaaaa
 
 #284000
 1aaaaa
-b1011100 aaaae
+b101 aaaae
 b100011000 aaaaf
-1aaaaq
-1aaabb
+r4 aaaay
+r2 aaaaz
 
 #284500
 0aaaaa
 
 #285000
 1aaaaa
-b1011101 aaaae
+b110 aaaae
 b100011001 aaaaf
-0aaaaq
-0aaabb
+r5 aaaay
+r3 aaaaz
 
 #285500
 0aaaaa
 
 #286000
 1aaaaa
-b1011110 aaaae
+b111 aaaae
 b100011010 aaaaf
-1aaaaq
-1aaabb
+r6 aaaay
+r4 aaaaz
 
 #286500
 0aaaaa
 
 #287000
 1aaaaa
-b1011111 aaaae
+b1000 aaaae
 b100011011 aaaaf
-0aaaaq
-0aaabb
+r7 aaaay
+r5 aaaaz
 
 #287500
 0aaaaa
 
 #288000
 1aaaaa
-b1100000 aaaae
+b1001 aaaae
 b100011100 aaaaf
-1aaaaq
-1aaabb
+1aaaaj
+r8 aaaay
+r6 aaaaz
 
 #288500
 0aaaaa
 
 #289000
 1aaaaa
-b1100001 aaaae
+b1010 aaaae
 b100011101 aaaaf
-0aaaaq
-0aaabb
+1aaaak
+r9 aaaay
+r7 aaaaz
 
 #289500
 0aaaaa
 
 #290000
 1aaaaa
-b1100010 aaaae
+b1011 aaaae
 b100011110 aaaaf
-1aaaaq
-1aaabb
+r10 aaaay
+r8 aaaaz
 
 #290500
 0aaaaa
 
 #291000
 1aaaaa
-b1100011 aaaae
+b1100 aaaae
 b100011111 aaaaf
-0aaaaq
-0aaabb
+r3 aaaaq
+r1 aaaar
+r11 aaaay
+r9 aaaaz
+
+#291010
+1aaaat
 
 #291500
 0aaaaa
 
 #292000
 1aaaaa
-b1100100 aaaae
+b1101 aaaae
 b100100000 aaaaf
-1aaaaq
-1aaabb
+r4 aaaaq
+r2 aaaar
+r12 aaaay
+r10 aaaaz
 
 #292500
 0aaaaa
 
 #293000
 1aaaaa
-b1100101 aaaae
+b1110 aaaae
 b100100001 aaaaf
-0aaaaq
-0aaabb
+r5 aaaaq
+r3 aaaar
+r13 aaaay
+r11 aaaaz
 
 #293500
 0aaaaa
 
 #294000
 1aaaaa
-b1100110 aaaae
+b1111 aaaae
 b100100010 aaaaf
-1aaaaq
-1aaabb
+r6 aaaaq
+r4 aaaar
+r14 aaaay
+r12 aaaaz
 
 #294500
 0aaaaa
 
 #295000
 1aaaaa
-b1100111 aaaae
+b10000 aaaae
 b100100011 aaaaf
-0aaaaq
-0aaabb
+r7 aaaaq
+r5 aaaar
+r15 aaaay
+r13 aaaaz
 
 #295500
 0aaaaa
 
 #296000
 1aaaaa
-b1101000 aaaae
+b10001 aaaae
 b100100100 aaaaf
-1aaaaq
-1aaabb
+r8 aaaaq
+r6 aaaar
+r16 aaaay
+r14 aaaaz
 
 #296500
 0aaaaa
 
 #297000
 1aaaaa
-b1101001 aaaae
+b10010 aaaae
 b100100101 aaaaf
-0aaaaq
-0aaabb
+r9 aaaaq
+r7 aaaar
+r17 aaaay
+r15 aaaaz
 
 #297500
 0aaaaa
 
 #298000
 1aaaaa
-b1101010 aaaae
+b10011 aaaae
 b100100110 aaaaf
-1aaaaq
-1aaabb
+r10 aaaaq
+r8 aaaar
+r18 aaaay
+r16 aaaaz
 
 #298500
 0aaaaa
 
 #299000
 1aaaaa
-b1101011 aaaae
+b10100 aaaae
 b100100111 aaaaf
-0aaaaq
+r11 aaaaq
+r9 aaaar
+
+#299010
 0aaabb
 
 #299500
@@ -2718,356 +3351,576 @@ b100100111 aaaaf
 
 #300000
 1aaaaa
-b1101100 aaaae
+b10101 aaaae
 b100101000 aaaaf
-1aaaaq
-1aaabb
+r12 aaaaq
+r10 aaaar
 
 #300500
 0aaaaa
 
 #301000
 1aaaaa
-b1101101 aaaae
+b10110 aaaae
 b100101001 aaaaf
-0aaaaq
-0aaabb
+r13 aaaaq
+r11 aaaar
 
 #301500
 0aaaaa
 
 #302000
 1aaaaa
-b1101110 aaaae
+b10111 aaaae
 b100101010 aaaaf
-1aaaaq
-1aaabb
+r14 aaaaq
+r12 aaaar
 
 #302500
 0aaaaa
 
 #303000
 1aaaaa
-b1101111 aaaae
+b11000 aaaae
 b100101011 aaaaf
-0aaaaq
-0aaabb
+r15 aaaaq
+r13 aaaar
+r168 aaaau
+r136 aaaav
+
+#303010
+1aaaax
 
 #303500
 0aaaaa
 
 #304000
 1aaaaa
-b1110000 aaaae
+b11001 aaaae
 b100101100 aaaaf
-1aaaaq
-1aaabb
+r16 aaaaq
+r14 aaaar
+
+#304010
+0aaaax
 
 #304500
 0aaaaa
 
 #305000
 1aaaaa
-b1110001 aaaae
+b11010 aaaae
 b100101101 aaaaf
-0aaaaq
-0aaabb
+r17 aaaaq
+r15 aaaar
+r-48.2187159370068 aaaau
+r32.21871593700678 aaaav
+
+#305010
+1aaaax
 
 #305500
 0aaaaa
 
 #306000
 1aaaaa
-b1110010 aaaae
+b11011 aaaae
 b100101110 aaaaf
-1aaabb
+r18 aaaaq
+r16 aaaar
+
+#306010
+0aaaax
 
 #306500
 0aaaaa
 
 #307000
 1aaaaa
-b1110011 aaaae
+b11100 aaaae
 b100101111 aaaaf
-0aaaah
-1aaaai
-0aaabb
+r-27.31370849898477 aaaau
+r11.31370849898477 aaaav
+
+#307010
+0aaaat
+1aaaax
 
 #307500
 0aaaaa
 
 #308000
 1aaaaa
-b1110100 aaaae
+b11101 aaaae
 b100110000 aaaaf
-1aaabb
+
+#308010
+0aaaax
 
 #308500
 0aaaaa
 
 #309000
 1aaaaa
-b1110101 aaaae
+b11110 aaaae
 b100110001 aaaaf
-0aaabb
+r-19.97284610132392 aaaau
+r3.97284610132391 aaaav
+
+#309010
+1aaaax
 
 #309500
 0aaaaa
 
 #310000
 1aaaaa
-b1110110 aaaae
+b11111 aaaae
 b100110010 aaaaf
-1aaabb
+
+#310010
+0aaaax
 
 #310500
 0aaaaa
 
 #311000
 1aaaaa
-b1110111 aaaae
+b100000 aaaae
 b100110011 aaaaf
-0aaabb
+r168 aaaam
+r136 aaaan
+r-16.00000000000009 aaaau
+r-9.237055564881302e-14 aaaav
+
+#311010
+1aaaap
+1aaaax
 
 #311500
 0aaaaa
 
 #312000
 1aaaaa
-b1111000 aaaae
+b100001 aaaae
 b100110100 aaaaf
-1aaabb
+
+#312010
+0aaaap
+0aaaax
 
 #312500
 0aaaaa
 
 #313000
 1aaaaa
-b1111001 aaaae
+b100010 aaaae
 b100110101 aaaaf
-0aaabb
+r-48.2187159370068 aaaam
+r32.21871593700678 aaaan
+r-13.34542910335444 aaaau
+r-2.654570896645623 aaaav
+
+#313010
+1aaaap
+1aaaax
 
 #313500
 0aaaaa
 
 #314000
 1aaaaa
-b1111010 aaaae
+b100011 aaaae
 b100110110 aaaaf
+
+#314010
+0aaaap
+0aaaax
 
 #314500
 0aaaaa
 
 #315000
 1aaaaa
-b1111011 aaaae
+b100100 aaaae
 b100110111 aaaaf
-0aaaas
-1aaaat
+r-27.31370849898477 aaaam
+r11.31370849898477 aaaan
+r-11.31370849898483 aaaau
+r-4.686291501015289 aaaav
+
+#315010
+1aaaap
+1aaaax
 
 #315500
 0aaaaa
 
 #316000
 1aaaaa
-0aaaac
-b1111100 aaaae
+b100101 aaaae
 b100111000 aaaaf
+
+#316010
+0aaaap
+0aaaax
 
 #316500
 0aaaaa
 
 #317000
 1aaaaa
-0aaaad
-b0 aaaae
+b100110 aaaae
 b100111001 aaaaf
-0aaaag
-0aaaar
+r-19.97284610132392 aaaam
+r3.97284610132391 aaaan
+r-9.59129893903726 aaaau
+r-6.408701060962652 aaaav
+
+#317010
+1aaaap
+1aaaax
 
 #317500
 0aaaaa
 
 #318000
 1aaaaa
+b100111 aaaae
 b100111010 aaaaf
-0aaaai
-0aaaat
+
+#318010
+0aaaap
+0aaaax
 
 #318500
 0aaaaa
 
 #319000
 1aaaaa
+b101000 aaaae
 b100111011 aaaaf
+r-16.00000000000009 aaaam
+r-9.237055564881302e-14 aaaan
+r-7.999999999999938 aaaau
+r-8.000000000000075 aaaav
+
+#319010
+1aaaap
+1aaaax
 
 #319500
 0aaaaa
 
 #320000
 1aaaaa
+b101001 aaaae
 b100111100 aaaaf
+
+#320010
+0aaaap
+0aaaax
 
 #320500
 0aaaaa
 
 #321000
 1aaaaa
+b101010 aaaae
 b100111101 aaaaf
+r-13.34542910335444 aaaam
+r-2.654570896645623 aaaan
+r-6.408701060962649 aaaau
+r-9.591298939037364 aaaav
+
+#321010
+1aaaap
+1aaaax
 
 #321500
 0aaaaa
 
 #322000
 1aaaaa
+b101011 aaaae
 b100111110 aaaaf
+
+#322010
+0aaaap
+0aaaax
 
 #322500
 0aaaaa
 
 #323000
 1aaaaa
+b101100 aaaae
 b100111111 aaaaf
+r-11.31370849898483 aaaam
+r-4.686291501015289 aaaan
+r-4.686291501015152 aaaau
+r-11.31370849898483 aaaav
+
+#323010
+1aaaap
+1aaaax
 
 #323500
 0aaaaa
 
 #324000
 1aaaaa
+b101101 aaaae
 b101000000 aaaaf
+
+#324010
+0aaaap
+0aaaax
 
 #324500
 0aaaaa
 
 #325000
 1aaaaa
+b101110 aaaae
 b101000001 aaaaf
+r-9.59129893903726 aaaam
+r-6.408701060962652 aaaan
+r-2.654570896645468 aaaau
+r-13.34542910335442 aaaav
+
+#325010
+1aaaap
+1aaaax
 
 #325500
 0aaaaa
 
 #326000
 1aaaaa
+b101111 aaaae
 b101000010 aaaaf
+
+#326010
+0aaaap
+0aaaax
 
 #326500
 0aaaaa
 
 #327000
 1aaaaa
+b110000 aaaae
 b101000011 aaaaf
+r-7.999999999999938 aaaam
+r-8.000000000000075 aaaan
+r-1.030286966852145e-13 aaaau
+r-16.00000000000011 aaaav
+
+#327010
+1aaaap
+1aaaax
 
 #327500
 0aaaaa
 
 #328000
 1aaaaa
+b110001 aaaae
 b101000100 aaaaf
+
+#328010
+0aaaap
+0aaaax
 
 #328500
 0aaaaa
 
 #329000
 1aaaaa
+b110010 aaaae
 b101000101 aaaaf
+r-6.408701060962649 aaaam
+r-9.591298939037364 aaaan
+r3.972846101323789 aaaau
+r-19.97284610132404 aaaav
+
+#329010
+1aaaap
+1aaaax
 
 #329500
 0aaaaa
 
 #330000
 1aaaaa
+b110011 aaaae
 b101000110 aaaaf
+
+#330010
+0aaaap
+0aaaax
 
 #330500
 0aaaaa
 
 #331000
 1aaaaa
+b110100 aaaae
 b101000111 aaaaf
+r-4.686291501015152 aaaam
+r-11.31370849898483 aaaan
+r11.31370849898493 aaaau
+r-27.31370849898466 aaaav
+
+#331010
+1aaaap
+1aaaax
 
 #331500
 0aaaaa
 
 #332000
 1aaaaa
+b110101 aaaae
 b101001000 aaaaf
+
+#332010
+0aaaap
+0aaaax
 
 #332500
 0aaaaa
 
 #333000
 1aaaaa
+b110110 aaaae
 b101001001 aaaaf
+r-2.654570896645468 aaaam
+r-13.34542910335442 aaaan
+r32.21871593700733 aaaau
+r-48.21871593700629 aaaav
+
+#333010
+1aaaap
+1aaaax
 
 #333500
 0aaaaa
 
 #334000
 1aaaaa
+b110111 aaaae
 b101001010 aaaaf
+
+#334010
+0aaaap
+0aaaax
 
 #334500
 0aaaaa
 
 #335000
 1aaaaa
+b111000 aaaae
 b101001011 aaaaf
+r-1.030286966852145e-13 aaaam
+r-16.00000000000011 aaaan
+
+#335010
+1aaaap
 
 #335500
 0aaaaa
 
 #336000
 1aaaaa
+b111001 aaaae
 b101001100 aaaaf
+0aaaah
+1aaaai
+
+#336010
+0aaaap
 
 #336500
 0aaaaa
 
 #337000
 1aaaaa
+b111010 aaaae
 b101001101 aaaaf
+r3.972846101323789 aaaam
+r-19.97284610132404 aaaan
+
+#337010
+1aaaap
 
 #337500
 0aaaaa
 
 #338000
 1aaaaa
+b111011 aaaae
 b101001110 aaaaf
+
+#338010
+0aaaap
 
 #338500
 0aaaaa
 
 #339000
 1aaaaa
+b111100 aaaae
 b101001111 aaaaf
+r11.31370849898493 aaaam
+r-27.31370849898466 aaaan
+
+#339010
+1aaaap
 
 #339500
 0aaaaa
 
 #340000
 1aaaaa
+b111101 aaaae
 b101010000 aaaaf
+
+#340010
+0aaaap
 
 #340500
 0aaaaa
 
 #341000
 1aaaaa
+b111110 aaaae
 b101010001 aaaaf
+r32.21871593700733 aaaam
+r-48.21871593700629 aaaan
+
+#341010
+1aaaap
 
 #341500
 0aaaaa
 
 #342000
 1aaaaa
+b111111 aaaae
 b101010010 aaaaf
+
+#342010
+0aaaap
 
 #342500
 0aaaaa
 
 #343000
 1aaaaa
-1aaaac
+b1000000 aaaae
 b101010011 aaaaf
 
 #343500
@@ -3075,42 +3928,45 @@ b101010011 aaaaf
 
 #344000
 1aaaaa
-1aaaad
-b1 aaaae
+b1000001 aaaae
 b101010100 aaaaf
-1aaaag
+0aaaak
+1aaaal
 
 #344500
 0aaaaa
 
 #345000
 1aaaaa
-b10 aaaae
+0aaaac
+b1000010 aaaae
 b101010101 aaaaf
-1aaaah
 
 #345500
 0aaaaa
 
 #346000
 1aaaaa
-b11 aaaae
+0aaaad
+b0 aaaae
 b101010110 aaaaf
+0aaaag
+0aaaaj
 
 #346500
 0aaaaa
 
 #347000
 1aaaaa
-b100 aaaae
 b101010111 aaaaf
+0aaaai
+0aaaal
 
 #347500
 0aaaaa
 
 #348000
 1aaaaa
-b101 aaaae
 b101011000 aaaaf
 
 #348500
@@ -3118,7 +3974,6 @@ b101011000 aaaaf
 
 #349000
 1aaaaa
-b110 aaaae
 b101011001 aaaaf
 
 #349500
@@ -3126,7 +3981,6 @@ b101011001 aaaaf
 
 #350000
 1aaaaa
-b111 aaaae
 b101011010 aaaaf
 
 #350500
@@ -3134,7 +3988,6 @@ b101011010 aaaaf
 
 #351000
 1aaaaa
-b1000 aaaae
 b101011011 aaaaf
 
 #351500
@@ -3142,25 +3995,20 @@ b101011011 aaaaf
 
 #352000
 1aaaaa
-b1001 aaaae
 b101011100 aaaaf
-1aaaar
 
 #352500
 0aaaaa
 
 #353000
 1aaaaa
-b1010 aaaae
 b101011101 aaaaf
-1aaaas
 
 #353500
 0aaaaa
 
 #354000
 1aaaaa
-b1011 aaaae
 b101011110 aaaaf
 
 #354500
@@ -3168,7 +4016,6 @@ b101011110 aaaaf
 
 #355000
 1aaaaa
-b1100 aaaae
 b101011111 aaaaf
 
 #355500
@@ -3176,7 +4023,6 @@ b101011111 aaaaf
 
 #356000
 1aaaaa
-b1101 aaaae
 b101100000 aaaaf
 
 #356500
@@ -3184,7 +4030,6 @@ b101100000 aaaaf
 
 #357000
 1aaaaa
-b1110 aaaae
 b101100001 aaaaf
 
 #357500
@@ -3192,7 +4037,6 @@ b101100001 aaaaf
 
 #358000
 1aaaaa
-b1111 aaaae
 b101100010 aaaaf
 
 #358500
@@ -3200,7 +4044,6 @@ b101100010 aaaaf
 
 #359000
 1aaaaa
-b10000 aaaae
 b101100011 aaaaf
 
 #359500
@@ -3208,7 +4051,6 @@ b101100011 aaaaf
 
 #360000
 1aaaaa
-b10001 aaaae
 b101100100 aaaaf
 
 #360500
@@ -3216,7 +4058,6 @@ b101100100 aaaaf
 
 #361000
 1aaaaa
-b10010 aaaae
 b101100101 aaaaf
 
 #361500
@@ -3224,7 +4065,6 @@ b101100101 aaaaf
 
 #362000
 1aaaaa
-b10011 aaaae
 b101100110 aaaaf
 
 #362500
@@ -3232,7 +4072,6 @@ b101100110 aaaaf
 
 #363000
 1aaaaa
-b10100 aaaae
 b101100111 aaaaf
 
 #363500
@@ -3240,7 +4079,6 @@ b101100111 aaaaf
 
 #364000
 1aaaaa
-b10101 aaaae
 b101101000 aaaaf
 
 #364500
@@ -3248,7 +4086,6 @@ b101101000 aaaaf
 
 #365000
 1aaaaa
-b10110 aaaae
 b101101001 aaaaf
 
 #365500
@@ -3256,7 +4093,6 @@ b101101001 aaaaf
 
 #366000
 1aaaaa
-b10111 aaaae
 b101101010 aaaaf
 
 #366500
@@ -3264,603 +4100,37 @@ b101101010 aaaaf
 
 #367000
 1aaaaa
-b11000 aaaae
 b101101011 aaaaf
-1aaaaq
 
 #367500
 0aaaaa
 
 #368000
 1aaaaa
-b11001 aaaae
 b101101100 aaaaf
-0aaaaq
 
 #368500
 0aaaaa
 
 #369000
 1aaaaa
-b11010 aaaae
 b101101101 aaaaf
-1aaaaq
 
 #369500
 0aaaaa
 
 #370000
 1aaaaa
-b11011 aaaae
 b101101110 aaaaf
-0aaaaq
 
 #370500
 0aaaaa
 
 #371000
 1aaaaa
-b11100 aaaae
 b101101111 aaaaf
-1aaaaq
 
 #371500
 0aaaaa
 
 #372000
-1aaaaa
-b11101 aaaae
-b101110000 aaaaf
-0aaaaq
-
-#372500
-0aaaaa
-
-#373000
-1aaaaa
-b11110 aaaae
-b101110001 aaaaf
-1aaaaq
-
-#373500
-0aaaaa
-
-#374000
-1aaaaa
-b11111 aaaae
-b101110010 aaaaf
-0aaaaq
-
-#374500
-0aaaaa
-
-#375000
-1aaaaa
-b100000 aaaae
-b101110011 aaaaf
-1aaaaq
-1aaabb
-
-#375500
-0aaaaa
-
-#376000
-1aaaaa
-b100001 aaaae
-b101110100 aaaaf
-0aaaaq
-0aaabb
-
-#376500
-0aaaaa
-
-#377000
-1aaaaa
-b100010 aaaae
-b101110101 aaaaf
-1aaaaq
-1aaabb
-
-#377500
-0aaaaa
-
-#378000
-1aaaaa
-b100011 aaaae
-b101110110 aaaaf
-0aaaaq
-0aaabb
-
-#378500
-0aaaaa
-
-#379000
-1aaaaa
-b100100 aaaae
-b101110111 aaaaf
-1aaaaq
-1aaabb
-
-#379500
-0aaaaa
-
-#380000
-1aaaaa
-b100101 aaaae
-b101111000 aaaaf
-0aaaaq
-0aaabb
-
-#380500
-0aaaaa
-
-#381000
-1aaaaa
-b100110 aaaae
-b101111001 aaaaf
-1aaaaq
-1aaabb
-
-#381500
-0aaaaa
-
-#382000
-1aaaaa
-b100111 aaaae
-b101111010 aaaaf
-0aaaaq
-0aaabb
-
-#382500
-0aaaaa
-
-#383000
-1aaaaa
-b101000 aaaae
-b101111011 aaaaf
-1aaaaq
-1aaabb
-
-#383500
-0aaaaa
-
-#384000
-1aaaaa
-b101001 aaaae
-b101111100 aaaaf
-0aaaaq
-0aaabb
-
-#384500
-0aaaaa
-
-#385000
-1aaaaa
-b101010 aaaae
-b101111101 aaaaf
-1aaaaq
-1aaabb
-
-#385500
-0aaaaa
-
-#386000
-1aaaaa
-b101011 aaaae
-b101111110 aaaaf
-0aaaaq
-0aaabb
-
-#386500
-0aaaaa
-
-#387000
-1aaaaa
-b101100 aaaae
-b101111111 aaaaf
-1aaaaq
-1aaabb
-
-#387500
-0aaaaa
-
-#388000
-1aaaaa
-b101101 aaaae
-b110000000 aaaaf
-0aaaaq
-0aaabb
-
-#388500
-0aaaaa
-
-#389000
-1aaaaa
-b101110 aaaae
-b110000001 aaaaf
-1aaaaq
-1aaabb
-
-#389500
-0aaaaa
-
-#390000
-1aaaaa
-b101111 aaaae
-b110000010 aaaaf
-0aaaaq
-0aaabb
-
-#390500
-0aaaaa
-
-#391000
-1aaaaa
-b110000 aaaae
-b110000011 aaaaf
-1aaaaq
-1aaabb
-
-#391500
-0aaaaa
-
-#392000
-1aaaaa
-b110001 aaaae
-b110000100 aaaaf
-0aaaaq
-0aaabb
-
-#392500
-0aaaaa
-
-#393000
-1aaaaa
-b110010 aaaae
-b110000101 aaaaf
-1aaaaq
-1aaabb
-
-#393500
-0aaaaa
-
-#394000
-1aaaaa
-b110011 aaaae
-b110000110 aaaaf
-0aaaaq
-0aaabb
-
-#394500
-0aaaaa
-
-#395000
-1aaaaa
-b110100 aaaae
-b110000111 aaaaf
-1aaaaq
-1aaabb
-
-#395500
-0aaaaa
-
-#396000
-1aaaaa
-b110101 aaaae
-b110001000 aaaaf
-0aaaaq
-0aaabb
-
-#396500
-0aaaaa
-
-#397000
-1aaaaa
-b110110 aaaae
-b110001001 aaaaf
-1aaaaq
-1aaabb
-
-#397500
-0aaaaa
-
-#398000
-1aaaaa
-b110111 aaaae
-b110001010 aaaaf
-0aaaaq
-0aaabb
-
-#398500
-0aaaaa
-
-#399000
-1aaaaa
-b111000 aaaae
-b110001011 aaaaf
-1aaabb
-
-#399500
-0aaaaa
-
-#400000
-1aaaaa
-b111001 aaaae
-b110001100 aaaaf
-0aaaah
-1aaaai
-0aaabb
-
-#400500
-0aaaaa
-
-#401000
-1aaaaa
-b111010 aaaae
-b110001101 aaaaf
-1aaabb
-
-#401500
-0aaaaa
-
-#402000
-1aaaaa
-b111011 aaaae
-b110001110 aaaaf
-0aaabb
-
-#402500
-0aaaaa
-
-#403000
-1aaaaa
-b111100 aaaae
-b110001111 aaaaf
-1aaabb
-
-#403500
-0aaaaa
-
-#404000
-1aaaaa
-b111101 aaaae
-b110010000 aaaaf
-0aaabb
-
-#404500
-0aaaaa
-
-#405000
-1aaaaa
-b111110 aaaae
-b110010001 aaaaf
-1aaabb
-
-#405500
-0aaaaa
-
-#406000
-1aaaaa
-b111111 aaaae
-b110010010 aaaaf
-0aaabb
-
-#406500
-0aaaaa
-
-#407000
-1aaaaa
-b1000000 aaaae
-b110010011 aaaaf
-
-#407500
-0aaaaa
-
-#408000
-1aaaaa
-b1000001 aaaae
-b110010100 aaaaf
-0aaaas
-1aaaat
-
-#408500
-0aaaaa
-
-#409000
-1aaaaa
-0aaaac
-b1000010 aaaae
-b110010101 aaaaf
-
-#409500
-0aaaaa
-
-#410000
-1aaaaa
-0aaaad
-b0 aaaae
-b110010110 aaaaf
-0aaaag
-0aaaar
-
-#410500
-0aaaaa
-
-#411000
-1aaaaa
-b110010111 aaaaf
-0aaaai
-0aaaat
-
-#411500
-0aaaaa
-
-#412000
-1aaaaa
-b110011000 aaaaf
-
-#412500
-0aaaaa
-
-#413000
-1aaaaa
-b110011001 aaaaf
-
-#413500
-0aaaaa
-
-#414000
-1aaaaa
-b110011010 aaaaf
-
-#414500
-0aaaaa
-
-#415000
-1aaaaa
-b110011011 aaaaf
-
-#415500
-0aaaaa
-
-#416000
-1aaaaa
-b110011100 aaaaf
-
-#416500
-0aaaaa
-
-#417000
-1aaaaa
-b110011101 aaaaf
-
-#417500
-0aaaaa
-
-#418000
-1aaaaa
-b110011110 aaaaf
-
-#418500
-0aaaaa
-
-#419000
-1aaaaa
-b110011111 aaaaf
-
-#419500
-0aaaaa
-
-#420000
-1aaaaa
-b110100000 aaaaf
-
-#420500
-0aaaaa
-
-#421000
-1aaaaa
-b110100001 aaaaf
-
-#421500
-0aaaaa
-
-#422000
-1aaaaa
-b110100010 aaaaf
-
-#422500
-0aaaaa
-
-#423000
-1aaaaa
-b110100011 aaaaf
-
-#423500
-0aaaaa
-
-#424000
-1aaaaa
-b110100100 aaaaf
-
-#424500
-0aaaaa
-
-#425000
-1aaaaa
-b110100101 aaaaf
-
-#425500
-0aaaaa
-
-#426000
-1aaaaa
-b110100110 aaaaf
-
-#426500
-0aaaaa
-
-#427000
-1aaaaa
-b110100111 aaaaf
-
-#427500
-0aaaaa
-
-#428000
-1aaaaa
-b110101000 aaaaf
-
-#428500
-0aaaaa
-
-#429000
-1aaaaa
-b110101001 aaaaf
-
-#429500
-0aaaaa
-
-#430000
-1aaaaa
-b110101010 aaaaf
-
-#430500
-0aaaaa
-
-#431000
-1aaaaa
-b110101011 aaaaf
-
-#431500
-0aaaaa
-
-#432000
-1aaaaa
-b110101100 aaaaf
-
-#432500
-0aaaaa
-
-#433000
-1aaaaa
-b110101101 aaaaf
-
-#433500
-0aaaaa
-
-#434000
-1aaaaa
-b110101110 aaaaf
-
-#434500
-0aaaaa
-
-#435000
-1aaaaa
-b110101111 aaaaf
-
-#435500
-0aaaaa
-
-#436000

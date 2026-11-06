@@ -39,7 +39,6 @@ SC_MODULE(Core) {
     // Internal Connections channels connecting DMA <-> FFT
     Combinational<complex_t> dma_to_fft_chan;
     Combinational<complex_t> fft_to_dma_chan;
-    sc_signal<bool> fft_out_valid;
 
     // Submodules
     DMA<AxiCfg, N_SIZE, FIRST_SAMPLE_LATENCY, INTER_SAMPLE_GAP> dma;
@@ -57,7 +56,6 @@ SC_MODULE(Core) {
           mem_write_port("mem_write_port"),
           dma_to_fft_chan("dma_to_fft_chan"),
           fft_to_dma_chan("fft_to_dma_chan"),
-          fft_out_valid("fft_out_valid"),
           dma("dma"),
           fft("fft")
     {
@@ -79,7 +77,6 @@ SC_MODULE(Core) {
         fft.rst_n(rst_n);
         fft.in_data(dma_to_fft_chan);
         fft.out_data(fft_to_dma_chan);
-        fft.out_valid(fft_out_valid);
     }
 
     void set_timing_parameters(int t1, int t2) {

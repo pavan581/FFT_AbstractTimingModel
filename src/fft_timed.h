@@ -9,10 +9,13 @@
  *   - INTER_SAMPLE_GAP     (T2): Clock cycles of idle gap between consecutive
  *     output samples (idle time between sample valid pulses).
  *
- * The module drives its own hardware out_valid port directly:
- *   - out_valid is high for exactly 1 clock cycle per output sample.
- *   - out_valid is low for exactly T1 cycles after the last input ends.
- *   - out_valid is low for exactly T2 cycles between consecutive output pulses.
+ * Timing Behavior:
+ *   - Consumes N complex input samples sequentially via in_data (Connections channel).
+ *   - Computes FFT in 0 simulation time using canonical standard C++ complex arithmetic.
+ *   - Waits exactly T1 (FIRST_SAMPLE_LATENCY) idle clock cycles after the last input sample is received.
+ *   - Streams the first output sample on out_data (Connections channel: val/rdy/msg).
+ *   - Streams the remaining (N-1) output samples with exactly T2 (INTER_SAMPLE_GAP) idle clock
+ *     cycles between consecutive output pulses.
  */
 
 #ifndef FFT_TIMED_H
@@ -38,9 +41,6 @@ SC_MODULE(FFTTimed) {
     In<complex_t> in_data;
     Out<complex_t> out_data;
 
-    // Hardware status port driven by module
-    sc_out<bool> out_valid;
-
     // Configurable timing parameters (T1, T2)
     int first_sample_latency;
     int inter_sample_gap;
@@ -64,7 +64,6 @@ SC_MODULE(FFTTimed) {
           rst_n("rst_n"),
           in_data("in_data"),
           out_data("out_data"),
-          out_valid("out_valid"),
           first_sample_latency(t1),
           inter_sample_gap(t2),
           in_buffer(N_SIZE),
@@ -105,7 +104,6 @@ private:
     void process_thread() {
         in_data.Reset();
         out_data.Reset();
-        out_valid.write(false);
         total_blocks_processed = 0;
         total_samples_in = 0;
         total_samples_out = 0;
@@ -127,22 +125,18 @@ private:
             }
 
             // Step 4: Stream first output sample (active for 1 clock cycle)
-            out_valid.write(true);
             out_data.Push(out_buffer[0]);
             total_samples_out++;
             wait();
-            out_valid.write(false);
 
             // Step 5: Stream remaining samples with exactly T2 idle cycles between them
             for (int i = 1; i < N_SIZE; ++i) {
                 for (int c = 0; c < inter_sample_gap; ++c) {
                     wait();
                 }
-                out_valid.write(true);
                 out_data.Push(out_buffer[i]);
                 total_samples_out++;
                 wait();
-                out_valid.write(false);
             }
 
             total_blocks_processed++;

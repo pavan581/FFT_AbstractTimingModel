@@ -15,6 +15,7 @@
 
 #include <systemc.h>
 #include <axi/axi4.h>
+#include <connections/connections_trace.h>
 #include <vector>
 #include <cmath>
 #include <cassert>
@@ -60,15 +61,8 @@ SC_MODULE(TbCore) {
     sc_signal<int> cycle_count;
     int test_failures;
 
-    // VCD waveform tracing signals
+    // VCD waveform tracing
     sc_trace_file* tf;
-    sc_signal<bool> trace_in_valid;
-    sc_signal<double> trace_in_real;
-    sc_signal<double> trace_in_imag;
-    sc_signal<bool> trace_out_valid;
-    sc_signal<double> trace_out_real;
-    sc_signal<double> trace_out_imag;
-    sc_signal<double> trace_out_magnitude;
 
     // CSV Data Logger
     DataTracer tracer;
@@ -88,13 +82,6 @@ SC_MODULE(TbCore) {
           cycle_count("cycle_count"),
           test_failures(0),
           tf(nullptr),
-          trace_in_valid("trace_in_valid"),
-          trace_in_real("trace_in_real"),
-          trace_in_imag("trace_in_imag"),
-          trace_out_valid("trace_out_valid"),
-          trace_out_real("trace_out_real"),
-          trace_out_imag("trace_out_imag"),
-          trace_out_magnitude("trace_out_magnitude"),
           tracer("core_unit", "./out/data")
     {
         // Hierarchical signal grouping for GTKWave
@@ -103,26 +90,21 @@ SC_MODULE(TbCore) {
             // Group: Control interface
             sc_trace(tf, clk, "ctrl.clk");
             sc_trace(tf, rst_n, "ctrl.rst_n");
-            sc_trace(tf, start, "ctrl.start");
-            sc_trace(tf, busy, "ctrl.busy");
-            sc_trace(tf, done, "ctrl.done");
-            sc_trace(tf, base_addr, "ctrl.base_addr");
-            sc_trace(tf, num_samples, "ctrl.num_samples");
             sc_trace(tf, cycle_count, "ctrl.cycle_count");
+            sc_trace(tf, start, "core.ctrl.start");
+            sc_trace(tf, busy, "core.ctrl.busy");
+            sc_trace(tf, done, "core.ctrl.done");
+            sc_trace(tf, base_addr, "core.cfg.base_addr");
+            sc_trace(tf, num_samples, "core.cfg.num_samples");
 
-            // Group: Input data stream
-            sc_trace(tf, trace_in_valid, "input.valid");
-            sc_trace(tf, trace_in_real, "input.real");
-            sc_trace(tf, trace_in_imag, "input.imag");
+            // Group: FFT Core Connections ports (rdy, val, msg)
+            sc_trace(tf, core.fft.in_data.rdy, "fft.in.rdy");
+            sc_trace(tf, core.fft.in_data.val, "fft.in.valid");
+            sc_trace(tf, core.fft.in_data.msg, "fft.in.msg");
 
-            // Group: Output data stream
-            sc_trace(tf, trace_out_valid, "output.valid");
-            sc_trace(tf, trace_out_real, "output.real");
-            sc_trace(tf, trace_out_imag, "output.imag");
-            sc_trace(tf, trace_out_magnitude, "output.magnitude");
-
-            // Group: Internal FFT Core Status
-            sc_trace(tf, core.fft_out_valid, "core.fft_out_valid");
+            sc_trace(tf, core.fft.out_data.rdy, "fft.out.rdy");
+            sc_trace(tf, core.fft.out_data.val, "fft.out.valid");
+            sc_trace(tf, core.fft.out_data.msg, "fft.out.msg");
         }
 
         // Memory connections
@@ -168,13 +150,6 @@ SC_MODULE(TbCore) {
         start.write(false);
         base_addr.write(0);
         num_samples.write(0);
-        trace_in_valid.write(false);
-        trace_out_valid.write(false);
-        trace_in_real.write(0.0);
-        trace_in_imag.write(0.0);
-        trace_out_real.write(0.0);
-        trace_out_imag.write(0.0);
-        trace_out_magnitude.write(0.0);
         wait(5);
         rst_n.write(true);
         wait(2);
@@ -224,13 +199,6 @@ SC_MODULE(TbCore) {
             input_samples[i] = complex_t(i + 1, std::round(5.0 * std::sin(i)));
             mem.write_word(i, pack_complex<AxiCfg>(input_samples[i]));
             tracer.log_input(input_samples[i]);
-
-            // Waveform pulse for each input sample
-            trace_in_valid.write(true);
-            trace_in_real.write(input_samples[i].real);
-            trace_in_imag.write(input_samples[i].imag);
-            wait();
-            trace_in_valid.write(false);
         }
 
         std::vector<complex_t> golden = GoldenFFT::compute(input_samples);
@@ -257,14 +225,6 @@ SC_MODULE(TbCore) {
         for (int i = 0; i < N; ++i) {
             actual[i] = unpack_complex<AxiCfg>(mem.read_word(out_start + i));
             tracer.log_output(actual[i]);
-
-            // Waveform pulse for each output sample
-            trace_out_valid.write(true);
-            trace_out_real.write(actual[i].real);
-            trace_out_imag.write(actual[i].imag);
-            trace_out_magnitude.write(actual[i].magnitude());
-            wait();
-            trace_out_valid.write(false);
         }
 
         std::string err;

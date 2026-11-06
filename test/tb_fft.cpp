@@ -4,7 +4,7 @@
  * Comprehensive unit testbench for FFTTimed module.
  *
  * Verification Features:
- *   - The DUT drives its own hardware out_valid port (1 cycle per sample, exact T1/T2 idle gaps).
+ *   - Traces native Connections channel signals (val, rdy, msg) directly for both in_data and out_data.
  *   - Exact cycle timing:
  *       T1: Exact idle gap in clock cycles after last input completes before first output begins.
  *       T2: Exact idle gap in clock cycles between consecutive output pulses (idle gap between values).
@@ -17,6 +17,7 @@
 
 #include <systemc.h>
 #include <connections/connections.h>
+#include <connections/connections_trace.h>
 #include <vector>
 #include <cmath>
 #include <cassert>
@@ -41,22 +42,13 @@ SC_MODULE(TbFFT) {
         T2_VAL = 3
     };
 
-    // Hardware out_valid port driven by DUT
-    sc_signal<bool> in_valid;
-    sc_signal<bool> out_valid;
-
     FFTTimed<N, T1_VAL, T2_VAL> dut;
 
     sc_signal<int> cycle_count;
     int test_failures;
 
-    // VCD waveform tracing signals
+    // VCD waveform trace file
     sc_trace_file* tf;
-    sc_signal<double> trace_in_real;
-    sc_signal<double> trace_in_imag;
-    sc_signal<double> trace_out_real;
-    sc_signal<double> trace_out_imag;
-    sc_signal<double> trace_out_magnitude;
 
     // CSV Data Logger
     DataTracer tracer;
@@ -67,7 +59,7 @@ SC_MODULE(TbFFT) {
 
     std::vector<complex_t> test_stimulus;
     std::vector<complex_t> captured_output;
-    std::vector<int> captured_output_cycles;
+    std::vector<int> output_valid_cycles;
     int last_input_end_cycle;
 
     int samples_to_consume;
@@ -78,17 +70,10 @@ SC_MODULE(TbFFT) {
           rst_n("rst_n"),
           in_chan("in_chan"),
           out_chan("out_chan"),
-          in_valid("in_valid"),
-          out_valid("out_valid"),
           dut("dut"),
           cycle_count("cycle_count"),
           test_failures(0),
           tf(nullptr),
-          trace_in_real("trace_in_real"),
-          trace_in_imag("trace_in_imag"),
-          trace_out_real("trace_out_real"),
-          trace_out_imag("trace_out_imag"),
-          trace_out_magnitude("trace_out_magnitude"),
           tracer("fft_unit", "./out/data"),
           last_input_end_cycle(0),
           samples_to_consume(0),
@@ -98,7 +83,6 @@ SC_MODULE(TbFFT) {
         dut.rst_n(rst_n);
         dut.in_data(in_chan);
         dut.out_data(out_chan);
-        dut.out_valid(out_valid);
 
         // VCD waveform tracing setup
         tf = sc_create_vcd_trace_file("./out/vcd/fft_unit");
@@ -107,14 +91,13 @@ SC_MODULE(TbFFT) {
             sc_trace(tf, rst_n, "ctrl.rst_n");
             sc_trace(tf, cycle_count, "ctrl.cycle_count");
 
-            sc_trace(tf, in_valid, "input.valid");
-            sc_trace(tf, trace_in_real, "input.real");
-            sc_trace(tf, trace_in_imag, "input.imag");
+            sc_trace(tf, dut.in_data.rdy, "in.ready");
+            sc_trace(tf, dut.in_data.val, "in.valid");
+            sc_trace(tf, dut.in_data.msg, "in.data");
 
-            sc_trace(tf, out_valid, "output.valid");
-            sc_trace(tf, trace_out_real, "output.real");
-            sc_trace(tf, trace_out_imag, "output.imag");
-            sc_trace(tf, trace_out_magnitude, "output.magnitude");
+            sc_trace(tf, dut.out_data.rdy, "out.ready");
+            sc_trace(tf, dut.out_data.val, "out.valid");
+            sc_trace(tf, dut.out_data.msg, "out.data");
         }
 
         SC_METHOD(cycle_tracker);
@@ -151,39 +134,26 @@ SC_MODULE(TbFFT) {
         wait(2);
     }
 
-    // Producer process: pushes 1 sample per clock cycle with accurate 1-cycle in_valid pulse
+    // Producer process: pushes 1 sample per clock cycle to in_chan
     void producer_thread() {
         in_chan.ResetWrite();
-        in_valid.write(false);
-        trace_in_real.write(0.0);
-        trace_in_imag.write(0.0);
         wait();
 
         while (true) {
             wait(start_producer_event);
             for (size_t i = 0; i < test_stimulus.size(); ++i) {
                 const complex_t& val = test_stimulus[i];
-                trace_in_real.write(val.real);
-                trace_in_imag.write(val.imag);
                 tracer.log_input(val);
-
-                in_valid.write(true);
                 in_chan.Push(val);
                 wait();
-                in_valid.write(false);
             }
-            last_input_end_cycle = cycle_count.read();
-            trace_in_real.write(0.0);
-            trace_in_imag.write(0.0);
+            last_input_end_cycle = (int)std::round(sc_time_stamp().to_seconds() * 1e9);
         }
     }
 
-    // Consumer process: pops output samples (out_valid is driven by the DUT)
+    // Consumer process: pops output samples synchronously at rising clock edges
     void consumer_thread() {
         out_chan.ResetRead();
-        trace_out_real.write(0.0);
-        trace_out_imag.write(0.0);
-        trace_out_magnitude.write(0.0);
         wait();
 
         while (true) {
@@ -197,25 +167,16 @@ SC_MODULE(TbFFT) {
             }
 
             captured_output.clear();
-            captured_output_cycles.clear();
 
             while (samples_to_consume > 0) {
                 complex_t sample = out_chan.Pop();
-
+                int cycle = (int)std::round(sc_time_stamp().to_seconds() * 1e9) - 1;
+                output_valid_cycles.push_back(cycle);
+                tracer.log_output(sample, cycle);
                 captured_output.push_back(sample);
-                captured_output_cycles.push_back(cycle_count.read());
-
-                trace_out_real.write(sample.real);
-                trace_out_imag.write(sample.imag);
-                trace_out_magnitude.write(sample.magnitude());
-                tracer.log_output(sample);
-
                 samples_to_consume--;
             }
 
-            trace_out_real.write(0.0);
-            trace_out_imag.write(0.0);
-            trace_out_magnitude.write(0.0);
             consumer_finished_event.notify();
         }
     }
@@ -224,16 +185,17 @@ SC_MODULE(TbFFT) {
         test_stimulus = stimulus;
         samples_to_consume = stimulus.size();
         consumer_initial_stall = initial_stall;
+        output_valid_cycles.clear();
         start_producer_event.notify();
         wait(consumer_finished_event);
     }
 
-    // Verify output channel remains completely idle (no spurious out_valid pulses) during buffer gap
+    // Verify output channel remains completely idle (no spurious val pulses) during buffer gap
     void verify_idle_channel(int duration_cycles, const char* context) {
         for (int c = 0; c < duration_cycles; ++c) {
             wait();
-            if (out_valid.read()) {
-                std::cerr << "  FAIL: Spurious out_valid detected during buffer gap after "
+            if (dut.out_data.val.read()) {
+                std::cerr << "  FAIL: Spurious out.val detected during buffer gap after "
                           << context << " at cycle " << cycle_count.read() << std::endl;
                 test_failures++;
                 return;
@@ -244,7 +206,7 @@ SC_MODULE(TbFFT) {
     void test_orchestrator() {
         std::cout << "\n========================================================" << std::endl;
         std::cout << "  RUNNING UNIT TESTS FOR FFT Timed MODULE (N=" << N << ")" << std::endl;
-        std::cout << "  (DUT hardware out_valid port, exact T1/T2 idle gaps)" << std::endl;
+        std::cout << "  (Connections channel val/rdy/msg, exact T1/T2 idle gaps)" << std::endl;
         std::cout << "========================================================" << std::endl;
 
         reset_dut();
@@ -292,7 +254,7 @@ SC_MODULE(TbFFT) {
         run_concurrent_transfer(stimulus);
 
         // 1. T1: Idle gap AFTER last input finishes before first output starts
-        int first_output_start_cycle = captured_output_cycles[0] - 1;
+        int first_output_start_cycle = output_valid_cycles[0];
         int idle_t1 = first_output_start_cycle - last_input_end_cycle;
         std::cout << "  Last input ended at cycle " << last_input_end_cycle
                   << ", First output started at cycle " << first_output_start_cycle
@@ -306,7 +268,7 @@ SC_MODULE(TbFFT) {
         // 2. T2: Idle gap BETWEEN consecutive output values (not including the values)
         bool t2_ok = true;
         for (int i = 1; i < N; ++i) {
-            int idle_t2 = captured_output_cycles[i] - captured_output_cycles[i - 1] - 1;
+            int idle_t2 = output_valid_cycles[i] - output_valid_cycles[i - 1] - 1;
             if (idle_t2 != T2_VAL) {
                 std::cerr << "  FAIL: Gap between sample " << (i - 1) << " and " << i
                           << " was " << idle_t2 << " idle cycles, expected T2=" << T2_VAL << std::endl;
@@ -341,7 +303,7 @@ SC_MODULE(TbFFT) {
 
         run_concurrent_transfer(stimulus);
 
-        int first_output_start_cycle = captured_output_cycles[0] - 1;
+        int first_output_start_cycle = output_valid_cycles[0];
         int idle_t1 = first_output_start_cycle - last_input_end_cycle;
         if (idle_t1 != 4) {
             std::cerr << "  FAIL: T1=" << idle_t1 << ", expected 4" << std::endl;
@@ -350,7 +312,7 @@ SC_MODULE(TbFFT) {
 
         bool contiguous = true;
         for (int i = 1; i < N; ++i) {
-            int idle_t2 = captured_output_cycles[i] - captured_output_cycles[i - 1] - 1;
+            int idle_t2 = output_valid_cycles[i] - output_valid_cycles[i - 1] - 1;
             if (idle_t2 != 0) {
                 std::cerr << "  FAIL: Output " << i << " idle gap=" << idle_t2 << ", expected 0" << std::endl;
                 contiguous = false;
@@ -380,7 +342,7 @@ SC_MODULE(TbFFT) {
 
         run_concurrent_transfer(stimulus);
 
-        int first_output_start_cycle = captured_output_cycles[0] - 1;
+        int first_output_start_cycle = output_valid_cycles[0];
         int idle_t1 = first_output_start_cycle - last_input_end_cycle;
         if (idle_t1 != 0) {
             std::cerr << "  FAIL: T1=" << idle_t1 << ", expected 0" << std::endl;
